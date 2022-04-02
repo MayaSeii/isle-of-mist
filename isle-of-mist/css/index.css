@@ -1,0 +1,256 @@
+:root {
+
+    --colour-btn-red: #994a4a;
+    --colour-btn-blue: #4a7599;
+    --colour-btn-dark: #444852;
+    --colour-btn-yellow: rgb(185, 137, 74);
+    --colour-btn-green: #6a9478;
+
+    --colour-btn-dark-red: #743636;
+    --colour-btn-dark-blue: #2d4b64;
+    --colour-btn-dark-dark: #2d3038;
+    --colour-btn-dark-yellow: rgb(146, 108, 58);
+    --colour-btn-dark-green: #557a61;
+
+}
+
+body {
+
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    background-color: rgb(161, 163, 165);
+    background-image: url('../img/bg.png');
+    background-size: cover;
+
+}
+
+button { cursor: pointer; }
+
+#character-container {
+    
+    border: 1px gray solid;
+    padding: 1rem;
+    width: 31.5rem;
+
+    text-align: center;
+    border-radius: 4px;
+
+    height: fit-content;
+
+    background-color: white;
+
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    margin: auto;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+
+}
+
+#counter {
+
+    display: none;
+    width: 31%;
+
+    margin-left: .5rem;
+    margin-right: .5rem;
+
+}
+
+.turn {
+
+    border: 1px gray solid;
+    border-radius: 4px;
+
+    background-color: white;
+
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+
+    padding: 1rem;
+    text-align: center;
+
+    height: fit-content;
+
+}
+
+.mini-sheets {
+
+    display: none;
+
+    border: 1px gray solid;
+    border-radius: 4px;
+
+    padding: 1rem;
+    width: 31.5rem;
+
+    height: fit-content;
+
+    background-color: white;
+
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+
+    flex: 1;
+
+}
+
+.mini-sheets > table tr th, .mini-sheets > table tr td {
+
+    font-size: .9rem;
+
+    padding: .4rem;
+    text-align: center;
+
+}
+
+.mini-sheets > table tr td {
+
+    width: 16.67%;
+
+}
+
+#character-container > button {
+    
+    width: 5rem;
+    padding: .4rem;
+
+}
+
+#character-select {
+
+    margin-top: 1rem;
+
+    display:flex;
+    justify-content: space-evenly;
+
+}
+
+#character-select > table {
+
+    width: 50%;
+
+}
+
+.break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+.char-control {
+
+    border: 1px solid grey;
+    padding: .5rem;
+    border-radius: 4px;
+
+    width: 33%;
+
+    text-align: center;
+
+    background-color: #eeeef1;
+
+}
+
+table, th, td {
+    border: 1px solid gray;
+    border-collapse: collapse;
+}
+
+td, th {
+
+    padding: .8rem;
+
+}
+
+th {
+
+    background-color: #e9e9ed;
+
+}
+
+code {
+
+    font-size: .9rem;
+    font-weight: bold;
+
+}
+
+.btn-attack {
+
+    background-color: var(--colour-btn-red);
+    color: white;
+    border: none;
+    border-radius: 4px;
+
+}
+
+.btn-attack:hover {
+
+    background-color: var(--colour-btn-dark-red);
+
+}
+
+.btn-guard {
+
+    background-color: var(--colour-btn-blue);
+    color: white;
+    border: none;
+    border-radius: 4px;
+
+}
+
+.btn-guard:hover {
+
+    background-color: var(--colour-btn-dark-blue);
+
+}
+
+.btn-skill {
+
+    background-color: var(--colour-btn-yellow);
+    color: white;
+    border: none;
+    border-radius: 4px;
+
+}
+
+.btn-skill:hover {
+
+    background-color: var(--colour-btn-dark-yellow);
+
+}
+
+.btn-direction {
+
+    background-color: var(--colour-btn-dark);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: .3rem;
+
+}
+
+.btn-direction:hover {
+
+    background-color: var(--colour-btn-dark-dark);
+
+}
+
+.btn-turn {
+
+    background-color: var(--colour-btn-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
+
+}
+
+.btn-turn:hover {
+
+    background-color: var(--colour-btn-dark-green);
+
+}
+
+button {
+    font-family: inherit;
+}
