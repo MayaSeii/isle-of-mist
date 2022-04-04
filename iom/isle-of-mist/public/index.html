@@ -18,7 +18,7 @@
 
         <div id="body-container">
 
-            <img id="title" src="./img/TitleFull.png">
+            <img id="title" src="./img/TitleFull.png" alt="title">
 
             <div id="login-container">
 
@@ -38,14 +38,39 @@
 
                     </div>
 
-                    <button id="btn-login">Login</button>
-                    <span id="no-account">No account? <a href="#">Register here.</a></span>
+                    <div id="group-confirm">
+
+                        <div class="input-group" style="margin-top: .5rem;">
+
+                            <div class="input-label"><i class="fa-solid fa-check-double"></i></div>
+                            <input id="input-confirm" type="password" placeholder="Confirm Password">
+                        
+                        </div>
+
+                    </div>
+
+                    <div id="group-login">
+
+                        <button id="btn-login">Login</button>
+                        <span id="no-account">No account? <a onclick="showRegister()">Register here.</a></span>
+
+                    </div>
+
+                    <div id="group-register">
+
+                        <button id="btn-register">Register</button>
+                        <span id="have-account">Already have an account? <a onclick="showLogin()">Login here.</a></span>
+
+                    </div>
 
                 </form>
 
             </div>
 
         </div>
+
+        <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="./js/login.js"></script>
 
     </body>
 

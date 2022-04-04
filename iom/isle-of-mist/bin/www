@@ -34,16 +34,16 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  var newPort = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(newPort)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (newPort >= 0) {
     // port number
-    return port;
+    return newPort;
   }
 
   return false;
@@ -89,7 +89,7 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-let pg = require('pg');
+/*let pg = require('pg');
 let util = require('util');
 
 let pool = new pg.Pool('postgres://localhost:5432/isleofmist');
@@ -103,13 +103,13 @@ function end() {
 
     if (err) throw err;
     
-    pool.end((err) => {
+    pool.end((e) => {
 
-      if (err) throw err;
+      if (e) throw e;
       process.exit();
 
     });
 
   });
 
-}
+}*/

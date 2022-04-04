@@ -1,0 +1,18 @@
+.diogo {
+
+    padding: 1rem;
+    margin: .5rem;
+
+}
+
+.oscar {
+
+    color: red;
+
+}
+
+button:not(:disabled):hover {
+
+    color: green;
+
+}

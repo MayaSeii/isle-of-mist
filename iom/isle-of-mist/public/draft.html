@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>Isle of Mist - Draft</title>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="./css/draft.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+        <link rel="stylesheet" type="text/css" href="./css/lib/all.css">
+
+    </head>
+
+    <body>
+
+        <div id="container">
+
+            <div class="team" style="margin-bottom: 1rem">
+                
+                <span class="team-label"><strong>Player 1</strong>'s Team</span>
+
+                <div id="team0">
+
+                    <img style="margin-right: .5rem;" class="small-avatar" alt="member"></img>
+                    <img style="margin-right: .5rem;" class="small-avatar" alt="member"></img>
+                    <img class="small-avatar" alt="member"></img>
+
+                </div>
+            
+            </div>
+
+            <div id="drafting">
+                
+                <div class="draft-row">
+
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/seii.png" alt="seii">
+                        <i class="fas fa-snake overlay-icon"></i> Seii
+                    </button>
+
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/alessia.png" alt="alessia">
+                        <i class="fas fa-feather-alt overlay-icon"></i>Alessia
+                    </button>
+
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/scarlet.png" alt="scarlet">
+                        <i class="fas fa-fire overlay-icon"></i>Scarlet
+                    </button>
+
+                </div>
+
+                <div class="draft-row">
+
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/shinsuke.png" alt="shinsuke">
+                        <i class="fas fa-bow-arrow overlay-icon"></i>Shinsuke
+                    </button>
+
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/zodan.png" style="transform:scaleX(-1)" alt="zodan">
+                        <i class="fas fa-sun overlay-icon"></i>Zodan
+                    </button>
+
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/gobbo.png" alt="gobbo">
+                        <i class="fas fa-mace overlay-icon"></i>Gobbo
+                    </button>
+                    
+                </div>
+
+            </div>
+    
+            <div class="team"style="margin-top: 1rem">
+                
+                <span class="team-label"><strong>Player 2</strong>'s Team</span>
+
+                <div id="team1">
+
+                    <img style="margin-right: .5rem;" class="small-avatar" alt="member"></img>
+                    <img style="margin-right: .5rem;" class="small-avatar" alt="member"></img>
+                    <img class="small-avatar" alt="member"></img>
+                    
+                </div>
+            
+            </div>
+
+            <button id="btn-play" disabled>Lock Picks</button>
+
+        </div>
+
+        <div id="details">
+
+            <h1>Character Details</h1>
+            <h2 id="details-name">Alessia Beauclair</h2>
+
+            <img id="details-bg" src="./img/art/alessia.png" alt="char">
+
+        </div>
+
+        <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="./js/draft.js"></script>
+
+    </body>
+
+</html>

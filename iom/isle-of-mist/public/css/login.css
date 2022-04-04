@@ -43,6 +43,12 @@ body {
 
 }
 
+#group-confirm, #group-register {
+
+    display: none;
+
+}
+
 #title {
 
     width: 24rem;
@@ -53,7 +59,7 @@ body {
 
 }
 
-#login-form > div > input {
+input {
 
     width: 15rem;
 
@@ -77,10 +83,12 @@ input::placeholder {
 a {
 
     color: var(--colour-iom-red);
+    cursor: pointer;
+    text-decoration: underline;
 
 }
 
-#btn-login {
+#btn-login, #btn-register {
 
     width: 100%;
     margin-top: 1rem;
@@ -99,10 +107,10 @@ a {
 
 }
 
-#no-account {
+#no-account, #have-account {
 
     display:inline-block;
-    margin-top: .4rem;
+    margin-top: .8rem;
     width: 100%;
     text-align: right;
     font-size: .8rem;
