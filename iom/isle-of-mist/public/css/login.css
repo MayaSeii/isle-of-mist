@@ -105,6 +105,16 @@ a {
     color: white;
     font-weight: 600;
 
+    cursor: pointer;
+
+    transition: .1s;
+
+}
+
+#btn-login:hover, #btn-register:hover {
+
+    box-shadow: inset 0 0 100px 100px rgba(50, 0, 0, 0.1);
+
 }
 
 #no-account, #have-account {
@@ -114,6 +124,17 @@ a {
     width: 100%;
     text-align: right;
     font-size: .8rem;
+
+}
+
+#verification {
+
+    display: none;
+
+    font-size: .8rem;
+    margin-top: .5rem;
+
+    color: var(--colour-text-error);
 
 }
 

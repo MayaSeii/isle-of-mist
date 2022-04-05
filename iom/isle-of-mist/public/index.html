@@ -8,6 +8,7 @@
         <meta charset="utf-8">
 
         <link rel="stylesheet" href="./css/login.css" />
+        <link rel="stylesheet" href="./css/lib/toastr.min.css" />
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 
         <script src="https://kit.fontawesome.com/d1c951a24f.js" crossorigin="anonymous"></script>
@@ -27,14 +28,14 @@
                     <div class="input-group">
 
                         <div class="input-label"><i class="fa-solid fa-user"></i></div>
-                        <input id="input-username" type="text" placeholder="Username">
+                        <input id="input-username" type="text" placeholder="Username" autocomplete="off">
 
                     </div>
 
                     <div class="input-group" style="margin-top: .5rem;">
 
                         <div class="input-label"><i class="fa-solid fa-key"></i></div>
-                        <input id="input-password" type="password" placeholder="Password">
+                        <input id="input-password" type="password" placeholder="Password" autocomplete="new-password">
 
                     </div>
 
@@ -43,11 +44,13 @@
                         <div class="input-group" style="margin-top: .5rem;">
 
                             <div class="input-label"><i class="fa-solid fa-check-double"></i></div>
-                            <input id="input-confirm" type="password" placeholder="Confirm Password">
+                            <input id="input-confirm" type="password" placeholder="Confirm Password" autocomplete="off">
                         
                         </div>
 
                     </div>
+
+                    <span id="verification">Invalid username or password! Please try again.</span>
 
                     <div id="group-login">
 
@@ -70,6 +73,7 @@
         </div>
 
         <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="./js/lib/toastr.min.js"></script>
         <script type="text/javascript" src="./js/login.js"></script>
 
     </body>

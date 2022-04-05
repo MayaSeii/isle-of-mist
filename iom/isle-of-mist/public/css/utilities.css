@@ -8,4 +8,17 @@
     --colour-iom-yellow: #e5a459;
     --colour-iom-red: #d14340;
 
+    --colour-text-error: #e32350;
+    
+    --colour-toast-success: #498e66;
+
+}
+
+.toast-success {
+
+    box-shadow: none !important;
+    background-color: var(--colour-toast-success) !important;
+    border-radius: 4px !important;
+    padding: 1rem !important;
+
 }
