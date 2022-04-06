@@ -14,11 +14,19 @@
 
 }
 
-.toast-success {
+#toast-container > .toast-success {
 
     box-shadow: none !important;
     background-color: var(--colour-toast-success) !important;
     border-radius: 4px !important;
     padding: 1rem !important;
+
+    background-image: none !important;
+
+}
+
+#toast-container > .toast-success:hover {
+
+    cursor: default;
 
 }

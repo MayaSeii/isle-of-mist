@@ -136,6 +136,11 @@ a {
 
     color: var(--colour-text-error);
 
+    width: 18.6rem;
+    overflow-wrap: normal;
+    text-align:justify;
+    text-justify: inter-word;
+
 }
 
 .input-group {

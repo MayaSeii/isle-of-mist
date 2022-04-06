@@ -1,18 +1,16 @@
-.diogo {
+#player1, #player2 {
 
+    background-color: lightgrey;
+    margin: 1rem .5rem;
     padding: 1rem;
-    margin: .5rem;
+    border-radius: 4px;
+
+    width: fit-content;
 
 }
 
-.oscar {
+#container {
 
-    color: red;
-
-}
-
-button:not(:disabled):hover {
-
-    color: green;
+    display: flex;
 
 }

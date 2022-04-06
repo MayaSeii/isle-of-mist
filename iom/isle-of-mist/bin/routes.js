@@ -68,6 +68,19 @@ module.exports = (app) => {
 
     });
 
+    app.get('/api/players/:username', (req, res) => {
+
+        let sql = `SELECT * FROM player WHERE name = '${req.params.username}'`;
+
+        pool.query(sql, (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
     app.post('/api/login', (req, res) => {
 
         // Gets the username and password from the request body.
