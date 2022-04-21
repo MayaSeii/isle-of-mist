@@ -67,7 +67,8 @@ $(document).ready(() => {
 
                 }
                 
-                alert("Welcome, " + response.rows[0].name + "!");
+                sessionStorage.setItem('currentAccount', response.rows[0].name);
+                document.location.href = '/dashboard';
 
             }
     
@@ -140,7 +141,7 @@ $(document).ready(() => {
         
                         showLogin(0);
         
-                        toastr.success(`Account ${login.username} registered successfully.`, {
+                        toastr.success(`Account <span style='font-weight: bold'>${login.username}</span> registered successfully.`, {
         
                             tapToDismiss: false,
                             toastClass: 'toast-success',

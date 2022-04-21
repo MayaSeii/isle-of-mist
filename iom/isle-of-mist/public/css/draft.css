@@ -144,6 +144,8 @@ button:disabled {
     flex-direction: column;
     width: 40rem;
 
+    display: none;
+
 }
 
 #btn-play {
@@ -188,6 +190,8 @@ button:disabled {
     width: 40rem;
 
     overflow: hidden;
+
+    display: none;
 
 }
 

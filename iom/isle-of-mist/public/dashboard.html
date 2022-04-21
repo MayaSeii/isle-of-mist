@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>Isle of Mist - Dashboard</title>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="./css/lib/toastr.min.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        
+        <link rel="stylesheet" href="./css/dashboard.css" />
+
+        <link rel="stylesheet" type="text/css" href="./css/lib/all.css">
+
+    </head>
+
+    <body>
+
+        <img id="title" src="./img/TitleFull.png" alt="title">
+
+        <div id="body-container">
+
+            <div style="display: flex">
+
+                <div>
+
+                    <div id="dashboard-main">
+
+                        <h2>User Dashboard</h2>
+                        <h4>Welcome, <span id="user">user</span>!</h4>
+            
+                        <div class="row">
+            
+                            <button id="btn-host">Host Room</button>
+                            <button id="btn-join">Join Room</button>
+            
+                        </div>
+            
+                        <div class="row">
+                            
+                            <button id="btn-settings">Account Settings</button>
+            
+                            <button id="btn-howto" title="How to Play"><i class="fas fa-question"></i></button>
+                            <button id="btn-signout" title="Sign Out"><i class="fas fa-sign-out"></i></button>
+            
+                        </div>
+            
+                    </div>
+
+                    <div id="dashboard-host">
+
+                        <div id="input-container">
+
+                            <div class="input-group" style="margin-top: .5rem;">
+
+                                <div class="input-label"><i class="fas fa-tag"></i></div>
+                                <input id="input-room-name" type="text" placeholder="Room Name" autocomplete="off">
+                            
+                            </div>
+
+                            <div class="input-group" style="margin-top: .5rem;">
+
+                                <div class="input-label"><i class="fas fa-key"></i></div>
+                                <input id="input-room-pass" type="password" placeholder="Room Password" autocomplete="off">
+                            
+                            </div>
+
+                        </div>
+
+                        <span id="verification">Invalid username or password! Please try again.</span>
+
+                        <button id="btn-host-start">Host Room</button>
+                        <button id="btn-join-start">Join Room</button>
+
+                    </div>
+
+                </div>
+
+                <div id="dashboard-room">
+
+                    <h2>Current Room</h2>
+                    <h4 style="margin-top: 2.6rem; text-align: center">
+                        Whoops! No room available.<br>
+                        <strong>Host</strong> or <strong>join</strong> a room.
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="./js/lib/toastr.min.js"></script>
+        <script type="text/javascript" src="./js/manager.js"></script>
+        <script type="text/javascript" src="./js/dashboard.js"></script>
+
+    </body>
+
+</html>

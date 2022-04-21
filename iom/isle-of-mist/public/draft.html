@@ -20,7 +20,7 @@
 
             <div class="team" style="margin-bottom: 1rem">
                 
-                <span class="team-label"><strong>Player 1</strong>'s Team</span>
+                <span class="team-label"><strong id="player1-name">Player 1</strong>'s Team</span>
 
                 <div id="team0">
 
@@ -36,32 +36,35 @@
                 
                 <div class="draft-row">
 
-                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/seii.png" alt="seii">
-                        <i class="fas fa-snake overlay-icon"></i> Seii
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/seii.png" alt="">
+                        <i class="fas overlay-icon"></i><span class="charname"></span>
                     </button>
 
-                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/alessia.png" alt="alessia">
-                        <i class="fas fa-feather-alt overlay-icon"></i>Alessia
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/alessia.png" alt="">
+                        <i class="fas overlay-icon"></i><span class="charname"></span>
                     </button>
 
-                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/scarlet.png" alt="scarlet">
-                        <i class="fas fa-fire overlay-icon"></i>Scarlet
+                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/scarlet.png" alt="">
+                        <i class="fas overlay-icon"></i><span class="charname"></span>
                     </button>
 
                 </div>
 
                 <div class="draft-row">
 
-                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/shinsuke.png" alt="shinsuke">
-                        <i class="fas fa-bow-arrow overlay-icon"></i>Shinsuke
+                    <button onclick="addToTeam(this)">
+                        <img class="avatar" src="./img/portraits/shinsuke.png" alt="">
+                        <i class="fas overlay-icon"></i><span class="charname"></span>
                     </button>
 
-                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/zodan.png" style="transform:scaleX(-1)" alt="zodan">
-                        <i class="fas fa-sun overlay-icon"></i>Zodan
+                    <button onclick="addToTeam(this)">
+                        <img class="avatar" src="./img/portraits/zodan.png" style="transform:scaleX(-1)" alt="">
+                        <i class="fas overlay-icon"></i><span class="charname"></span>
                     </button>
 
-                    <button onclick="addToTeam(this)"><img class="avatar" src="./img/portraits/gobbo.png" alt="gobbo">
-                        <i class="fas fa-mace overlay-icon"></i>Gobbo
+                    <button onclick="addToTeam(this)">
+                        <img class="avatar" src="./img/portraits/gobbo.png" alt="">
+                        <i class="fas fa-mace overlay-icon"></i><span class="charname"></span>
                     </button>
                     
                 </div>
@@ -97,6 +100,7 @@
 
         <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="./js/draft.js"></script>
+        <script type="text/javascript" src="./js/manager.js"></script>
 
     </body>
 

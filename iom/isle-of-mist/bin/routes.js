@@ -46,7 +46,20 @@ module.exports = (app) => {
         res.sendFile(path.resolve('public/draft.html'));
     });
 
-    app.get('/characters', function (req, res) {
+    app.get('/dashboard', (req, res) => {
+        res.sendFile(path.resolve('public/dashboard.html'));
+    });
+
+    app.get('/game', (req, res) => {
+        res.sendFile(path.resolve('public/main.html'));
+    });
+
+    // TODO: test game, remove later.
+    app.get('/test', (req, res) => {
+        res.sendFile(path.resolve('public/testgame.html'));
+    });
+
+    app.get('/api/characters', function (req, res) {
 
         select('*', 'character', (err, result) => {
     
@@ -55,6 +68,19 @@ module.exports = (app) => {
     
         });
   
+    });
+
+    app.get('/api/characters/:id', function (req, res) {
+
+        let sql = `SELECT * FROM character WHERE id = $1`;
+
+        pool.query(sql, [req.params.id], (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
     });
 
     app.get('/api/players', (req, res) => {
@@ -68,11 +94,120 @@ module.exports = (app) => {
 
     });
 
+    app.get('/api/rooms', (req, res) => {
+
+        select('*', 'match', (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
+    app.post('/api/newRoom', (req, res) => {
+
+        // Gets the username and password from the request body.
+        let name = req.body.name;
+        let password = req.body.password;
+        let user = req.body.user;
+
+        console.log(user)
+
+        bcrypt.hash(password, 10, (err, encrypted) => {
+
+            password = encrypted;
+            
+            // Creates the SQL query.
+            let sql = `INSERT INTO match (name, password, playeroneid, turn)
+            VALUES ($1, $2, $3, 1)`;
+
+            // Executes the query.
+            pool.query(sql, [name, password, user], (err, result) => {
+
+                if (err) return res.status(500).send(err);
+                return res.status(200).send(result);
+
+            });
+
+        });
+
+    });
+
     app.get('/api/players/:username', (req, res) => {
 
-        let sql = `SELECT * FROM player WHERE name = '${req.params.username}'`;
+        let sql = `SELECT * FROM player WHERE name = $1`;
 
-        pool.query(sql, (err, result) => {
+        pool.query(sql, [req.params.username], (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
+    app.get('/api/skills/:id', (req, res) => {
+
+        let sql = `SELECT * FROM skill
+                   INNER JOIN characterskill ON characterskill.skillid = skill.id
+                   WHERE characterskill.charid = $1`;
+
+        pool.query(sql, [req.params.id], (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
+    app.get('/api/matches/:id', (req, res) => {
+
+        let sql = `SELECT * FROM match WHERE id = $1`;
+
+        pool.query(sql, [req.params.id], (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
+    app.get('/api/arenas/:id', (req, res) => {
+
+        let sql = `SELECT * FROM arena WHERE id = $1`;
+
+        pool.query(sql, [req.params.id], (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
+    app.get('/api/matchcharacters/:playerId', (req, res) => {
+
+        let sql = `SELECT * FROM matchcharacter
+                   INNER JOIN character ON matchcharacter.characterid = character.id
+                   WHERE playerid = $1`;
+
+        pool.query(sql, [req.params.playerId], (err, result) => {
+    
+            if (err) return res.status(500).send(err);
+            res.status(200).send(result);
+    
+        });
+
+    });
+
+    app.get('/api/guardians/:id', (req, res) => {
+
+        let sql = `SELECT * FROM guardian WHERE id = $1`;
+
+        pool.query(sql, [req.params.id], (err, result) => {
     
             if (err) return res.status(500).send(err);
             res.status(200).send(result);
@@ -131,6 +266,27 @@ module.exports = (app) => {
                 return res.status(200).send(result);
 
             });
+
+        });
+
+    });
+
+    app.post('/api/matchcharacters/:id', (req, res) => {
+
+        // Gets the position from the request body.
+        let positionx = req.body.positionx;
+        let positiony = req.body.positiony;
+            
+        // Creates the SQL query.
+        let sql = `UPDATE matchcharacter
+                    SET positionx = $1, positiony = $2
+                    WHERE mcid = $3`;
+
+        // Executes the query.
+        pool.query(sql, [positionx, positiony, req.params.id], (err, result) => {
+
+            if (err) return res.status(500).send(err);
+            return res.status(200).send(result);
 
         });
 

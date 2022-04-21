@@ -3,6 +3,11 @@
     --colour-page-bg: rgb(161, 163, 165);
     --colour-shadows: rgba(0, 0, 0, 0.15);
 
+    --colour-btn-red: #b74543;
+    --colour-btn-blue: #437fb7;
+    --colour-btn-green: #43b78d;
+    --colour-btn-dark: #57575e;
+
     --colour-borders: #474747;
 
     --colour-iom-yellow: #e5a459;
