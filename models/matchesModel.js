@@ -93,3 +93,29 @@ module.exports.getMatchGuardian = async function(id) {
     }
 
 }
+
+module.exports.updateMatchCharacter = async function(id, character) {
+
+    try {
+
+        let query = `UPDATE matchcharacter
+                     SET matchcharacter.positionx = $1, matchcharacter.positiony = $2
+                     WHERE matchcharacter.id = $3`;
+                     
+        let result = await pool.query(query, [character.positionx, character.positiony, id]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows;
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}

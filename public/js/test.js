@@ -306,9 +306,10 @@ $(document).ready(async () => {
 
     $('#btn-end').click(() => {
 
-        console.log(currentChar);
+        currentChar.positionx = $('#xpos').text();
+        currentChar.positiony = $('#ypos').text();
 
-        updateCharacter(currentChar.mcid, $('#xpos').text(), $('#ypos').text());
+        updateMatchCharacter(currentChar.mcid, currentChar);
 
         historyX[0] = historyX[historyX.length - 1];
         historyX.length = 1;

@@ -48,3 +48,29 @@ async function getMatchGuardian(id) {
     } catch (err) { console.log(err); }
 
 }
+
+async function updateMatchCharacter(id, character) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(character)
+
+        });
+
+        if (response.status == 200) {
+
+            var guardian = await response.json();
+            return guardian;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
