@@ -98,4 +98,26 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+/**
+ * Clean disconnect for Postgres DB.
+ */
 
+var pool = require("../models/connection");
+
+process.once('SIGTERM', () => {
+
+  server.close((err) => {
+
+    if (err) throw err;
+    console.log('Server ended!'); 
+
+    pool.end((err) => {
+
+      if (err) throw err; 
+      process.exit();
+
+    });
+
+  });
+
+});

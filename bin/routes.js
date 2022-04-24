@@ -59,30 +59,6 @@ module.exports = (app) => {
         res.sendFile(path.resolve('public/testgame.html'));
     });
 
-    app.get('/api/characters', function (req, res) {
-
-        select('*', 'character', (err, result) => {
-    
-            if (err) return res.status(500).send(err);
-            res.status(200).send(result);
-    
-        });
-  
-    });
-
-    app.get('/api/characters/:id', function (req, res) {
-
-        let sql = `SELECT * FROM character WHERE id = $1`;
-
-        pool.query(sql, [req.params.id], (err, result) => {
-    
-            if (err) return res.status(500).send(err);
-            res.status(200).send(result);
-    
-        });
-
-    });
-
     app.get('/api/players', (req, res) => {
 
         select('*', 'player', (err, result) => {
@@ -139,21 +115,6 @@ module.exports = (app) => {
         let sql = `SELECT * FROM player WHERE name = $1`;
 
         pool.query(sql, [req.params.username], (err, result) => {
-    
-            if (err) return res.status(500).send(err);
-            res.status(200).send(result);
-    
-        });
-
-    });
-
-    app.get('/api/skills/:id', (req, res) => {
-
-        let sql = `SELECT * FROM skill
-                   INNER JOIN characterskill ON characterskill.skillid = skill.id
-                   WHERE characterskill.charid = $1`;
-
-        pool.query(sql, [req.params.id], (err, result) => {
     
             if (err) return res.status(500).send(err);
             res.status(200).send(result);

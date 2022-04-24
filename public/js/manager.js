@@ -73,31 +73,6 @@ async function getCharacter(id) {
 
 }
 
-async function getCharacterSkills(id) {
-
-    try {
-
-        const response = await fetch(`/api/skills/${id}`);
-
-        if (response.status == 200) {
-
-            var skills = await response.json();
-            return skills.rowCount == 0 ? undefined : skills.rows;
-
-        } else {
-
-            console.log(response);
-
-        }
-
-    } catch (err) {
-
-        console.log(err);
-
-    }
-
-}
-
 async function getMatchDetails(id) {
 
     try {
@@ -172,31 +147,6 @@ async function updateCharacter(id, positionx, positiony) {
 
         console.log(err);
         return 0;
-    }
-
-}
-
-async function getPlayerCharacters(id) {
-
-    try {
-
-        const response = await fetch(`/api/matchcharacters/${id}`);
-
-        if (response.status == 200) {
-
-            var match = await response.json();
-            return match.rowCount == 0 ? undefined : match.rows;
-
-        } else {
-
-            console.log(response);
-
-        }
-
-    } catch (err) {
-
-        console.log(err);
-
     }
 
 }

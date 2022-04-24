@@ -1,0 +1,50 @@
+async function getMatch(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/${id}`);
+
+        if (response.status == 200) {
+
+            var match = await response.json();
+            return match;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function getMatchArena(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/${id}/arena`);
+
+        if (response.status == 200) {
+
+            var arena = await response.json();
+            return arena.rawcode;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function getMatchGuardian(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/${id}/guardian`);
+
+        if (response.status == 200) {
+
+            var guardian = await response.json();
+            return guardian;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

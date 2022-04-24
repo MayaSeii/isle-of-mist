@@ -13,7 +13,12 @@
 
     <body style="margin: auto; margin-top: 5rem; width: 50%; display: flex; justify-content: space-between;">
 
-        <div class="mini-sheets" id="p1sheet">
+        <div id="player-selection">
+            <button id="sel-p1" class="btn-skill">Player 1</button>
+            <button id="sel-p2" class="btn-skill">Player 2</button>
+        </div>
+
+        <div id="mini-sheets">
 
             <div style="width: fit-content; border-radius:4px; overflow:hidden; border: 1px solid gray;">
 
@@ -101,11 +106,19 @@
 
         </div>
 
+        <!-- Libraries -->
         <script src="./js/lib/jquery-3.6.0.min.js"></script>
         <script src="./js/lib/p5.min.js"></script>
 
         <script type="text/javascript" src="./js/manager.js"></script>
-        <script src="./js/test.js"></script>
+
+        <!-- Request Scripts -->
+        <script type="application/javascript" src="./js/requests/characterRequests.js"></script>
+        <script type="application/javascript" src="./js/requests/matchRequests.js"></script>
+        <script type="application/javascript" src="./js/requests/playerRequests.js"></script>
+        
+        <!-- Page Script -->
+        <script type="application/javascript" src="./js/test.js"></script>
 
     </body>
 

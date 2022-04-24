@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -5,6 +7,10 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+var charactersRouter = require('./routes/characterRoutes');
+var matchesRouter = require('./routes/matchRoutes');
+var playersRouter = require('./routes/playerRoutes');
 
 var app = express();
 
@@ -16,5 +22,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api/characters', charactersRouter);
+app.use('/api/matches', matchesRouter);
+app.use('/api/players', playersRouter);
 
 module.exports = app;

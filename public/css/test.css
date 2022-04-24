@@ -39,11 +39,30 @@ button { cursor: pointer; }
 
 #counter {
 
+    display: none;
+
     width: 55.1%;
 
     margin-left: 1rem;
 
 }
+
+#player-selection {
+
+    margin: auto;
+
+}
+
+#player-selection > button {
+
+    display: block;
+    margin: 1rem;
+
+    font-size: 1.4rem;
+    width: 25rem;
+
+}
+
 
 .turn {
 
@@ -81,7 +100,9 @@ button { cursor: pointer; }
 
 }
 
-.mini-sheets {
+#mini-sheets {
+
+    display: none;
 
     border: 1px gray solid;
     border-radius: 4px;
@@ -99,7 +120,7 @@ button { cursor: pointer; }
 
 }
 
-.mini-sheets > div > table tr th, .mini-sheets > div > table tr td {
+#mini-sheets > div > table tr th, #mini-sheets > div > table tr td {
 
     font-size: .9rem;
 
@@ -108,19 +129,19 @@ button { cursor: pointer; }
 
 }
 
-.mini-sheets  > div > table tr td {
+#mini-sheets  > div > table tr td {
 
     width: 2rem !important;
 
 }
 
-.mini-sheets  > div > table tr td:first-of-type {
+#mini-sheets  > div > table tr td:first-of-type {
 
     width: 7rem !important;
 
 }
 
-#character-container > button {
+button {
     
     width: 5rem;
     padding: .4rem;

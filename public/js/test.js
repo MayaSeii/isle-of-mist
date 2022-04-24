@@ -8,11 +8,11 @@ const MatchID = 25;
 const boardSize = 18;
 const tileSize = 24.6;
 
+var currentChar;
+var enemyChar;
+
 var match;
 var arena;
-
-var char1;
-var char2;
 
 var guardian;
 
@@ -29,7 +29,7 @@ function draw() {
     
     strokeWeight(.5);
     stroke(255)
-    if (char2 == undefined) return;
+    if (enemyChar == undefined) return;
 
     let tempArena = arena.replace(/(?:\r\n|\r|\n)/g, '');
 
@@ -60,7 +60,7 @@ function draw() {
     circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
 
     fill('red');
-    circle((18 - char2.positionx) * tileSize, (18 - char2.positiony) * tileSize, tileSize);
+    circle((18 - enemyChar.positionx) * tileSize, (18 - enemyChar.positiony) * tileSize, tileSize);
 
     fill('purple');
     circle((18 - guardian.positionx) * tileSize, (18 - guardian.positiony) * tileSize, tileSize * 3);
@@ -69,44 +69,68 @@ function draw() {
 
 $(document).ready(async () => {
 
-    match = await getMatchDetails(MatchID);
-    arena = await getArenaCode(match.arenaid);
+    // Gets the test match and the associated arena and guardian.
+    match = await getMatch(MatchID);
+    arena = await getMatchArena(MatchID);
+    guardian = await getMatchGuardian(MatchID);
 
+    // Gets both players IDs.
     let player1 = match.playeroneid;
     let player2 = match.playertwoid;
 
-    guardian = await getGuardianById(match.guardianid);
+    $('#sel-p1').click(async () => { 
+        
+        currentChar = await getPlayerCharacters(player1);
+        enemyChar = await getPlayerCharacters(player2);
 
-    char1 = await getPlayerCharacters(player1);
-    char2 = await getPlayerCharacters(player2);
-
-    char1 = char1[0];
-    char2 = char2[0];
-
-    let skills1 = await getCharacterSkills(char1.characterid);
-
-    $('#charname').text(char1.firstname);
-    $('#chartitle').text(char1.firstname);
-
-    $('#hp').text(char1.hp);
-    $('#pow').text(char1.baseatk);
-    $('#def').text(char1.basedef);
-    $('#acc').text(char1.baseacc);
-
-    $('#xpos').text(char1.positionx);
-    $('#ypos').text(char1.positiony);
+        loadPage(); 
     
-    $('#skill1').html(`<strong>${skills1[0].name}</strong> | ${skills1[0].cost} AP`);
-    $('#skill2').html(`<strong>${skills1[1].name}</strong> | ${skills1[1].cost} AP`);
+    });
 
-    $('#skill1').parent().attr('title', skills1[0].description);
-    $('#skill2').parent().attr('title', skills1[1].description);
+    $('#sel-p2').click(async () => { 
+        
+        currentChar = await getPlayerCharacters(player2);
+        enemyChar = await getPlayerCharacters(player1);
 
-    $('#skill1').data('cost', skills1[0].cost);
-    $('#skill2').data('cost', skills1[1].cost);
+        loadPage();
+    
+    });
 
-    historyX = [char1.positionx];
-    historyY = [char1.positiony];
+    async function loadPage() {
+
+        currentChar = currentChar[0];
+        enemyChar = enemyChar[0];
+
+        let skills = await getCharacterSkills(currentChar.characterid);
+
+        $('#charname').text(currentChar.firstname);
+        $('#chartitle').text(currentChar.firstname);
+
+        $('#hp').text(currentChar.hp);
+        $('#pow').text(currentChar.baseatk);
+        $('#def').text(currentChar.basedef);
+        $('#acc').text(currentChar.baseacc);
+
+        $('#xpos').text(currentChar.positionx);
+        $('#ypos').text(currentChar.positiony);
+        
+        $('#skill1').html(`<strong>${skills[0].name}</strong> | ${skills[0].cost} AP`);
+        $('#skill2').html(`<strong>${skills[1].name}</strong> | ${skills[1].cost} AP`);
+
+        $('#skill1').parent().attr('title', skills[0].description);
+        $('#skill2').parent().attr('title', skills[1].description);
+
+        $('#skill1').data('cost', skills[0].cost);
+        $('#skill2').data('cost', skills[1].cost);
+
+        historyX = [currentChar.positionx];
+        historyY = [currentChar.positiony];
+
+        $('#player-selection').hide();
+        $('#mini-sheets').show();
+        $('#counter').show();
+
+    }
 
     $('#up').click(() => {
 
@@ -272,9 +296,9 @@ $(document).ready(async () => {
 
     $('#btn-end').click(() => {
 
-        console.log(char1);
+        console.log(currentChar);
 
-        updateCharacter(char1.mcid, $('#xpos').text(), $('#ypos').text());
+        updateCharacter(currentChar.mcid, $('#xpos').text(), $('#ypos').text());
 
         historyX[0] = historyX[historyX.length - 1];
         historyX.length = 1;
