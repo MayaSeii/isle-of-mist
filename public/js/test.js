@@ -25,14 +25,20 @@ function setup() {
 
 function draw() {
 
-    background(0);
+    // Default background colour: green.
+    background('#a5d188');
     
+    // Sets a thin white stroke.
     strokeWeight(.5);
-    stroke(255)
+    stroke(255);
+
+    // Awaits until the enemy character is defined.
     if (enemyChar == undefined) return;
 
+    // Creates a temporary arena string to parse.
     let tempArena = arena.replace(/(?:\r\n|\r|\n)/g, '');
 
+    // Creates the board from the arena string.
     for (let y = 0; y < boardSize; y++) {
 
         for (let x = 0; x < boardSize; x++) {
@@ -41,7 +47,7 @@ function draw() {
 
                 case 'G': fill('#a5d188'); break;
                 case 'L': fill('#e06d5e'); break;
-                case 'S': fill('#ebc894'); break;
+                case 'F': fill('#46734d'); break;
                 case 'W': fill('#88b1d1'); break;
 
             }
@@ -55,15 +61,19 @@ function draw() {
     }
 
     ellipseMode(CORNER);
+    noStroke();
 
+    // Draws the player character.
     fill('white');
     circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
 
+    // Draws the enemy character.
     fill('red');
-    circle((18 - enemyChar.positionx) * tileSize, (18 - enemyChar.positiony) * tileSize, tileSize);
+    circle((enemyChar.positionx - 1) * tileSize, (18 - enemyChar.positiony) * tileSize, tileSize);
 
+    // Draws the Guardian.
     fill('purple');
-    circle((18 - guardian.positionx) * tileSize, (18 - guardian.positiony) * tileSize, tileSize * 3);
+    circle((guardian.positionx - 2) * tileSize, (18 - guardian.positiony - 1) * tileSize, tileSize * 3);
 
 }
 
@@ -104,7 +114,7 @@ $(document).ready(async () => {
         let skills = await getCharacterSkills(currentChar.characterid);
 
         $('#charname').text(currentChar.firstname);
-        $('#chartitle').text(currentChar.firstname);
+        $('#chartitle').text(`${currentChar.firstname}${currentChar.lastname}, ${currentChar.title}`);
 
         $('#hp').text(currentChar.hp);
         $('#pow').text(currentChar.baseatk);
