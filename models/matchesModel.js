@@ -99,8 +99,8 @@ module.exports.updateMatchCharacter = async function(id, character) {
     try {
 
         let query = `UPDATE matchcharacter
-                     SET matchcharacter.positionx = $1, matchcharacter.positiony = $2
-                     WHERE matchcharacter.id = $3`;
+                     SET positionx = $1, positiony = $2
+                     WHERE matchcharacter.mcid = $3`;
                      
         let result = await pool.query(query, [character.positionx, character.positiony, id]);
 

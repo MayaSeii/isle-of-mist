@@ -60,7 +60,7 @@ async function updateMatchCharacter(id, character) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(character)
+            body: JSON.stringify({ character: character })
 
         });
 
