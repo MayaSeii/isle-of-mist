@@ -14,3 +14,20 @@ async function getPlayerCharacters(id) {
     } catch (err) { console.log(err); }
 
 }
+
+async function getPlayerByName(name) {
+
+    try {
+
+        const response = await fetch(`/api/players/name/${name}`);
+
+        if (response.status == 200) {
+
+            var characters = await response.json();
+            return characters;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

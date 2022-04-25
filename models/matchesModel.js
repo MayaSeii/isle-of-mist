@@ -94,15 +94,41 @@ module.exports.getMatchGuardian = async function(id) {
 
 }
 
+module.exports.getMatchCharacterById = async function(id) {
+
+    try {
+
+        let query = `SELECT * FROM matchcharacter
+                     WHERE matchcharacter.mcid = $1`;
+                     
+        let result = await pool.query(query, [id]);
+
+        if (result.rows.length > 0) {
+
+            let guardian = result.rows[0];
+            return { status: 200, result: guardian };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
 module.exports.updateMatchCharacter = async function(id, character) {
 
     try {
 
         let query = `UPDATE matchcharacter
-                     SET positionx = $1, positiony = $2
-                     WHERE matchcharacter.mcid = $3`;
+                     SET positionx = $1, positiony = $2, hp = $3
+                     WHERE matchcharacter.mcid = $4
+                     RETURNING *`;
                      
-        let result = await pool.query(query, [character.positionx, character.positiony, id]);
+        let result = await pool.query(query, [character.positionx, character.positiony, character.hp, id]);
 
         if (result.rows.length > 0) {
 
@@ -110,6 +136,34 @@ module.exports.updateMatchCharacter = async function(id, character) {
             return { status: 200, result: character };
 
         } else return { status: 404, result: { msg: "No character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.newTurn = async function(id) {
+
+    try {
+
+        let query = `UPDATE match
+                     SET round = CASE WHEN activeplayer = playertwoid THEN round + 1 ELSE round END,
+                         activeplayer = CASE WHEN activeplayer = playeroneid THEN playertwoid ELSE playeroneid END
+                     WHERE match.id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id]);
+
+        if (result.rows.length > 0) {
+
+            let match = result.rows[0];
+            return { status: 200, result: match };
+
+        } else return { status: 404, result: { msg: "No match with that ID!" } };
 
     } catch (err) {
 

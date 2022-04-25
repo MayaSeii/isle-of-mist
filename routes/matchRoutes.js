@@ -33,11 +33,27 @@ router.get('/:id/guardian', async function(req, res, next) {
     
 });
 
+router.get('/characters/:id', async function(req, res, next) {
+
+    let id = req.params.id;
+    let result = await mModel.getMatchCharacterById(id);
+    res.status(result.status).send(result.result);
+
+});
+
 router.post('/characters/:id', async function(req, res, next) {
 
     let id = req.params.id;
     let character = req.body.character;
     let result = await mModel.updateMatchCharacter(id, character);
+    res.status(result.status).send(result.result);
+
+});
+
+router.post('/:id/newTurn', async function(req, res, next) {
+
+    let id = req.params.id;
+    let result = await mModel.newTurn(id);
     res.status(result.status).send(result.result);
 
 });

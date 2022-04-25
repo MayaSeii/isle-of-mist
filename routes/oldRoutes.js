@@ -1,37 +1,7 @@
-let pg = require('pg');
-let util = require('util');
-var path = require('path');
+/* FILE WILL BE REMOVED IN FUTURE VERSIONS, SORRY! */
+
 const bcrypt = require('bcrypt');
-
-let pool = new pg.Pool({
-
-  host: 'localhost',
-  user: 'postgres',
-  password: 'Cupk4keTiem!',
-  database: 'IsleOfMist'
-
-});
-
-pool.query = util.promisify(pool.query);
-
-process.once('SIGTERM', end);
-
-function end() {
-
-  server.close((err) => {
-
-    if (err) throw err;
-    
-    pool.end((e) => {
-
-      if (e) throw e;
-      process.exit();
-
-    });
-
-  });
-
-}
+var pool = require('../models/connection.js');
 
 function select(data, table, fun) {
 
@@ -41,23 +11,6 @@ function select(data, table, fun) {
 }
 
 module.exports = (app) => {
-
-    app.get('/draft', (req, res) => {
-        res.sendFile(path.resolve('public/draft.html'));
-    });
-
-    app.get('/dashboard', (req, res) => {
-        res.sendFile(path.resolve('public/dashboard.html'));
-    });
-
-    app.get('/game', (req, res) => {
-        res.sendFile(path.resolve('public/main.html'));
-    });
-
-    // TODO: test game, remove later.
-    app.get('/test', (req, res) => {
-        res.sendFile(path.resolve('public/testgame.html'));
-    });
 
     app.get('/api/players', (req, res) => {
 

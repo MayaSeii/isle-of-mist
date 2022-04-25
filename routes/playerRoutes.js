@@ -17,6 +17,14 @@ router.get('/:id', async function(req, res, next) {
     
 });
 
+router.get('/name/:username', async function(req, res) {
+
+    let name = req.params.username;
+    let result = await pModel.getPlayerByName(name);
+    res.status(result.status).send(result.result);
+
+});
+
 router.get('/:id/characters', async function(req, res, next) {
 
     let id = req.params.id;

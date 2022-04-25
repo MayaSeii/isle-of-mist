@@ -74,3 +74,24 @@ async function updateMatchCharacter(id, character) {
     } catch (err) { console.log(err); }
 
 }
+
+async function newTurn(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/${id}/newTurn`, {
+
+            method: 'post'
+
+        });
+
+        if (response.status == 200) {
+
+            var match = await response.json();
+            return match;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

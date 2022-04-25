@@ -42,6 +42,29 @@ module.exports.getPlayerById = async function(id) {
 
 }
 
+module.exports.getPlayerByName = async function(name) {
+
+    try {
+
+        let query = 'SELECT * FROM player WHERE name = $1';
+        let result = await pool.query(query, [name]);
+
+        if (result.rows.length > 0) {
+
+            let player = result.rows[0];
+            return { status: 200, result: player };
+
+        } else return { status: 404, result: { msg: "No player with that name!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
 module.exports.getPlayerCharacters = async function(id) {
 
     try {
