@@ -26,7 +26,7 @@ let hasAttacked = false;
 
 async function updateData() {
 
-    if (currentPlayer == undefined) return;
+    if (enemyChar == undefined) return;
 
     match = await getMatch(MatchID);
     if (match.activeplayer != currentPlayer) return;
