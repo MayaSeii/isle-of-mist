@@ -186,6 +186,7 @@ $(document).ready(async () => {
         if (match.activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
+        updateMovement(parseInt($('#xpos').text()),parseInt($('#ypos').text()));
     }
 
     $('#up').click(() => {
@@ -200,7 +201,7 @@ $(document).ready(async () => {
         updateHistory();
 
         checkAttackRange();
-
+        tileActions(parseInt($('#xpos').text())-1, 18 - parseInt($('#ypos').text()));
     });
 
     $('#down').click(() => {
@@ -215,7 +216,7 @@ $(document).ready(async () => {
         updateHistory();
 
         checkAttackRange();
-
+        tileActions(parseInt($('#xpos').text())-1, 18 - parseInt($('#ypos').text()));
     });
 
     $('#left').click(() => {
@@ -230,7 +231,7 @@ $(document).ready(async () => {
         updateHistory();
 
         checkAttackRange();
-
+        tileActions(parseInt($('#xpos').text())-1, 18 - parseInt($('#ypos').text()));
     });
 
     $('#right').click(() => {
@@ -245,7 +246,7 @@ $(document).ready(async () => {
         updateHistory();
 
         checkAttackRange();
-
+        tileActions(parseInt($('#xpos').text())-1, 18 - parseInt($('#ypos').text()));
     });
 
     $('#btn-undo').click(() => {
@@ -440,7 +441,7 @@ function resetButtons() {
 
     checkAttackRange();
 
-    toggleDisable('btn-skill1', apVal < parseInt($('#skill1').data('cost'))  && currentTurn);
+    toggleDisable('btn-skill1', apVal < parseInt($('#skill1').data('cost')));
     toggleDisable('btn-skill2', apVal < parseInt($('#skill2').data('cost')));
 
     toggleDisable('btn-end', currentTurn);
@@ -448,12 +449,12 @@ function resetButtons() {
     toggleDisable('btn-undo', apVal >= 6 && currentTurn);
     toggleDisable('btn-undoall', apVal >= 6 && currentTurn);
 
-    toggleDisable('up', apVal <= 0 && currentTurn);
-    toggleDisable('down', apVal <= 0 && currentTurn);
-    toggleDisable('left', apVal <= 0 && currentTurn);
-    toggleDisable('right', apVal <= 0 && currentTurn);
-    toggleDisable('btn-skill3', (apVal <= 0 && !canAttack && currentTurn) || hasAttacked);
-    toggleDisable('btn-skill4', apVal <= 0 && currentTurn);
+    toggleDisable('up', apVal <= 0 || parseInt($('#ypos').text())==18);
+    toggleDisable('down', apVal <= 0 || parseInt($('#ypos').text())==1);
+    toggleDisable('left', apVal <= 0 || parseInt($('#xpos').text())==1 );
+    toggleDisable('right', apVal <= 0 || parseInt($('#xpos').text())==18 );
+    toggleDisable('btn-skill3', (apVal <= 0 && !canAttack) || hasAttacked);
+    toggleDisable('btn-skill4', apVal <= 0);
 
     if (apVal >= 6) {
 
@@ -461,5 +462,27 @@ function resetButtons() {
         toggleDisable('btn-undoall', true);
 
     }
+
+    
+}
+
+function updateMovement(xPos,yPos){
+
+        toggleDisable("left", xPos==1);
+        toggleDisable("rigth", xPos==18);
+        toggleDisable("up", yPos==18);
+        toggleDisable("down", yPos==11);
+}
+
+function tileActions(xPos,yPos){
+    
+    let CurrentTile = board[yPos][xPos];
+
+        if(CurrentTile=="L"){ console.log("Lava");currentChar.hp -= 1; }
+        if(CurrentTile=="G"){ console.log("Grass"); }
+        if(CurrentTile=="F"){ console.log("Forrest"); }
+        if(CurrentTile=="W"){ console.log("Water"); }
+
+        updateMatchCharacter(currentChar.mcid, currentChar);
 
 }
