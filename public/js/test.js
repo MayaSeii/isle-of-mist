@@ -478,11 +478,11 @@ function tileActions(xPos,yPos){
     
     let CurrentTile = board[yPos][xPos];
 
-        if(CurrentTile=="L"){ console.log("Lava");currentChar.hp -= 1; }
+        if(CurrentTile=="L"){ console.log("Lava");currentChar.mch_hp -= 1; }
         if(CurrentTile=="G"){ console.log("Grass"); }
         if(CurrentTile=="F"){ console.log("Forrest"); }
         if(CurrentTile=="W"){ console.log("Water"); }
 
-        updateMatchCharacter(currentChar.mcid, currentChar);
+        updateMatchCharacter(currentChar.mch_id, currentChar);
 
 }
