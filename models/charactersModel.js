@@ -23,7 +23,7 @@ module.exports.getCharacterById = async function(id) {
 
     try {
 
-        let query = 'SELECT * FROM character WHERE id = $1';
+        let query = 'SELECT * FROM character WHERE chr_id = $1';
         let result = await pool.query(query, [id]);
 
         if (result.rows.length > 0) {
@@ -47,8 +47,8 @@ module.exports.getCharacterSkills = async function(id) {
     try {
 
         let query = `SELECT * FROM skill
-                     INNER JOIN characterskill ON characterskill.skillid = skill.id
-                     WHERE characterskill.charid = $1`;
+                     INNER JOIN characterskill ON characterskill.cs_skl_id = skill.skl_id
+                     WHERE characterskill.cs_chr_id = $1`;
                      
         let result = await pool.query(query, [id]);
 

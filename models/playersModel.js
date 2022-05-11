@@ -23,7 +23,7 @@ module.exports.getPlayerById = async function(id) {
 
     try {
 
-        let query = 'SELECT * FROM player WHERE id = $1';
+        let query = 'SELECT * FROM player WHERE ply_id = $1';
         let result = await pool.query(query, [id]);
 
         if (result.rows.length > 0) {
@@ -46,7 +46,7 @@ module.exports.getPlayerByName = async function(name) {
 
     try {
 
-        let query = 'SELECT * FROM player WHERE name = $1';
+        let query = 'SELECT * FROM player WHERE ply_name = $1';
         let result = await pool.query(query, [name]);
 
         if (result.rows.length > 0) {
@@ -70,9 +70,9 @@ module.exports.getPlayerCharacters = async function(id) {
     try {
 
         let query = `SELECT * FROM matchcharacter
-                     INNER JOIN player ON matchcharacter.playerid = player.id
-                     INNER JOIN character ON matchcharacter.characterid = character.id
-                     WHERE player.id = $1`;
+                     INNER JOIN player ON matchcharacter.mch_ply_id = player.ply_id
+                     INNER JOIN character ON matchcharacter.mch_chr_id = character.chr_id
+                     WHERE player.ply_id = $1`;
                      
         let result = await pool.query(query, [id]);
 

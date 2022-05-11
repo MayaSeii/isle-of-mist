@@ -23,7 +23,7 @@ module.exports.getMatchById = async function(id) {
 
     try {
 
-        let query = 'SELECT * FROM match WHERE id = $1';
+        let query = 'SELECT * FROM match WHERE m_id = $1';
         let result = await pool.query(query, [id]);
 
         if (result.rows.length > 0) {
@@ -47,8 +47,8 @@ module.exports.getMatchArena = async function(id) {
     try {
 
         let query = `SELECT * FROM arena
-                     INNER JOIN match ON match.arenaid = arena.id
-                     WHERE match.id = $1`;
+                     INNER JOIN match ON match.m_arn_id = arena.arn_id
+                     WHERE match.m_id = $1`;
                      
         let result = await pool.query(query, [id]);
 
@@ -73,8 +73,8 @@ module.exports.getMatchGuardian = async function(id) {
     try {
 
         let query = `SELECT * FROM guardian
-                     INNER JOIN match ON match.guardianid = guardian.id
-                     WHERE match.id = $1`;
+                     INNER JOIN match ON match.m_grd_id = guardian.grd_id
+                     WHERE match.m_id = $1`;
                      
         let result = await pool.query(query, [id]);
 
@@ -99,7 +99,7 @@ module.exports.getMatchCharacterById = async function(id) {
     try {
 
         let query = `SELECT * FROM matchcharacter
-                     WHERE matchcharacter.mcid = $1`;
+                     WHERE matchcharacter.mch_id = $1`;
                      
         let result = await pool.query(query, [id]);
 
@@ -124,8 +124,8 @@ module.exports.updateMatchCharacter = async function(id, character) {
     try {
 
         let query = `UPDATE matchcharacter
-                     SET positionx = $1, positiony = $2, hp = $3
-                     WHERE matchcharacter.mcid = $4
+                     SET mch_positionx = $1, mch_positiony = $2, hp = $3
+                     WHERE matchcharacter.mch_id = $4
                      RETURNING *`;
                      
         let result = await pool.query(query, [character.positionx, character.positiony, character.hp, id]);
@@ -151,9 +151,9 @@ module.exports.newTurn = async function(id) {
     try {
 
         let query = `UPDATE match
-                     SET round = CASE WHEN activeplayer = playertwoid THEN round + 1 ELSE round END,
-                         activeplayer = CASE WHEN activeplayer = playeroneid THEN playertwoid ELSE playeroneid END
-                     WHERE match.id = $1
+                     SET m_round = CASE WHEN m_activeplayer = m_playertwoid THEN m_round + 1 ELSE m_round END,
+                         m_activeplayer = CASE WHEN m_activeplayer = m_playeroneid THEN m_playertwoid ELSE m_playeroneid END
+                     WHERE match.m_id = $1
                      RETURNING *`;
                      
         let result = await pool.query(query, [id]);

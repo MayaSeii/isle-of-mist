@@ -29,7 +29,7 @@ async function updateData() {
     if (enemyChar == undefined) return;
 
     match = await getMatch(MatchID);
-    if (match.activeplayer != currentPlayer) return;
+    if (match.m_activeplayer != currentPlayer) return;
 
     resetButtons();
     checkAttackRange();
@@ -40,9 +40,9 @@ async function updateData() {
     currentChar = await getPlayerCharacters(currentPlayer);
     currentChar = currentChar[0];
 
-    $('#round-number').text(`Round ${match.round}`);
-    $('#turn-number').text(`${match.activeplayer}'s turn`);
-    $('#hp').text(`${currentChar.hp}`);
+    $('#round-number').text(`Round ${match.m_round}`);
+    $('#turn-number').text(`${match.m_activeplayer}'s turn`);
+    $('#hp').text(`${currentChar.mch_hp}`);
 
 }
 
@@ -101,11 +101,11 @@ function draw() {
 
     // Draws the enemy character.
     fill('red');
-    circle((enemyChar.positionx - 1) * tileSize, (18 - enemyChar.positiony) * tileSize, tileSize);
+    circle((enemyChar.mch_positionx - 1) * tileSize, (18 - enemyChar.mch_positiony) * tileSize, tileSize);
 
     // Draws the Guardian.
     fill('purple');
-    circle((guardian.positionx - 2) * tileSize, (18 - guardian.positiony - 1) * tileSize, tileSize * 3);
+    circle((guardian.grd_positionx - 2) * tileSize, (18 - guardian.grd_positiony - 1) * tileSize, tileSize * 3);
 
 }
 
@@ -117,8 +117,8 @@ $(document).ready(async () => {
     guardian = await getMatchGuardian(MatchID);
 
     // Gets both players IDs.
-    let player1 = match.playeroneid;
-    let player2 = match.playertwoid;
+    let player1 = match.m_playeroneid;
+    let player2 = match.m_playertwoid;
 
     // Sets the current and enemy player for player 1.
     $('#sel-p1').click(async () => { 
@@ -151,39 +151,39 @@ $(document).ready(async () => {
         checkAttackRange();
         resetButtons();
 
-        let skills = await getCharacterSkills(currentChar.characterid);
+        let skills = await getCharacterSkills(currentChar.cs_chr_id);
 
-        $('#charname').text(currentChar.firstname);
-        $('#chartitle').text(`${currentChar.firstname}${currentChar.lastname}, ${currentChar.title}`);
+        $('#charname').text(currentChar.chr_firstname);
+        $('#chartitle').text(`${currentChar.chr_firstname}${currentChar.chr_lastname}, ${currentChar.chr_title}`);
 
-        $('#hp').text(currentChar.hp);
-        $('#pow').text(currentChar.baseatk);
-        $('#def').text(currentChar.basedef);
-        $('#acc').text(currentChar.baseacc);
+        $('#hp').text(currentChar.mch_hp);
+        $('#pow').text(currentChar.chr_baseatk);
+        $('#def').text(currentChar.chr_basedef);
+        $('#acc').text(currentChar.chr_baseacc);
 
-        $('#xpos').text(currentChar.positionx);
-        $('#ypos').text(currentChar.positiony);
+        $('#xpos').text(currentChar.mch_positionx);
+        $('#ypos').text(currentChar.mch_positiony);
         
-        $('#skill1').html(`<strong>${skills[0].name}</strong> | ${skills[0].cost} AP`);
-        $('#skill2').html(`<strong>${skills[1].name}</strong> | ${skills[1].cost} AP`);
+        $('#skill1').html(`<strong>${skills[0].skl_name}</strong> | ${skills[0].skl_cost} AP`);
+        $('#skill2').html(`<strong>${skills[1].skl_name}</strong> | ${skills[1].skl_cost} AP`);
 
-        $('#skill1').parent().attr('title', skills[0].description);
-        $('#skill2').parent().attr('title', skills[1].description);
+        $('#skill1').parent().attr('title', skills[0].skl_description);
+        $('#skill2').parent().attr('title', skills[1].skl_description);
 
-        $('#skill1').data('cost', skills[0].cost);
-        $('#skill2').data('cost', skills[1].cost);
+        $('#skill1').data('cost', skills[0].skl_cost);
+        $('#skill2').data('cost', skills[1].skl_cost);
 
-        $('#round-number').text(`Round ${match.round}`);
-        $('#turn-number').text(`${match.activeplayer}'s turn`);
+        $('#round-number').text(`Round ${match.m_round}`);
+        $('#turn-number').text(`${match.m_activeplayer}'s turn`);
 
-        historyX = [currentChar.positionx];
-        historyY = [currentChar.positiony];
+        historyX = [currentChar.mch_positionx];
+        historyY = [currentChar.mch_positiony];
 
         $('#player-selection').hide();
         $('#mini-sheets').show();
         $('#counter').show();
 
-        if (match.activeplayer != currentPlayer) $(':button').prop('disabled', true);
+        if (match.m_activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
         updateMovement(parseInt($('#xpos').text()),parseInt($('#ypos').text()));
@@ -341,13 +341,13 @@ $(document).ready(async () => {
 
     $('#btn-end').click(async () => {
 
-        currentChar.positionx = $('#xpos').text();
-        currentChar.positiony = $('#ypos').text();
+        currentChar.mch_positionx = $('#xpos').text();
+        currentChar.mch_positiony = $('#ypos').text();
 
-        if (hasAttacked) enemyChar.hp -= 1;
+        if (hasAttacked) enemyChar.mch_hp -= 1;
 
-        await updateMatchCharacter(currentChar.mcid, currentChar);
-        await updateMatchCharacter(enemyChar.mcid, enemyChar);
+        await updateMatchCharacter(currentChar.mch_id, currentChar);
+        await updateMatchCharacter(enemyChar.mch_id, enemyChar);
 
         historyX[0] = historyX[historyX.length - 1];
         historyX.length = 1;
@@ -380,13 +380,13 @@ $(document).ready(async () => {
         if (parseInt($('#xpos').text()) == boardSize) toggleDisable('right', true);
         if (parseInt($('#ypos').text()) == boardSize) toggleDisable('up', true);
 
-        let tempMatch = await newTurn(match.id);
+        let tempMatch = await newTurn(match.m_id);
         match = tempMatch;
             
-        $('#round-number').text(`Round ${match.round}`);
-        $('#turn-number').text(`${match.activeplayer}'s turn`);
+        $('#round-number').text(`Round ${match.m_round}`);
+        $('#turn-number').text(`${match.m_activeplayer}'s turn`);
 
-        if (match.activeplayer != currentPlayer) $(':button').prop('disabled', true);
+        if (match.m_activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
         hasAttacked = false
@@ -419,13 +419,13 @@ function toggleDisable(id, bool) {
 
 function checkAttackRange() {
 
-    if (match.activeplayer != currentPlayer) return canAttack = false;
+    if (match.m_activeplayer != currentPlayer) return canAttack = false;
 
     let xPos = parseInt($('#xpos').text());
     let yPos = parseInt($('#ypos').text());
 
-    let xPosEnemy = enemyChar.positionx;
-    let yPosEnemy = enemyChar.positiony;
+    let xPosEnemy = enemyChar.mch_positionx;
+    let yPosEnemy = enemyChar.mch_positiony;
 
     canAttack = (xPos == xPosEnemy && (yPos == yPosEnemy + 1 || yPos == yPosEnemy - 1)) ||
                 (yPos == yPosEnemy && (xPos == xPosEnemy + 1 || xPos == xPosEnemy - 1));
@@ -436,7 +436,7 @@ function checkAttackRange() {
 
 function resetButtons() {
 
-    let currentTurn = match.activeplayer != currentPlayer;
+    let currentTurn = match.m_activeplayer != currentPlayer;
     let apVal = parseInt($('#ap').text());
 
     checkAttackRange();
