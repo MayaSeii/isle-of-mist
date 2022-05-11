@@ -24,7 +24,7 @@ async function getMatchArena(id) {
         if (response.status == 200) {
 
             var arena = await response.json();
-            return arena.rawcode;
+            return arena.arn_rawcode;
 
         } else { console.log(response); }
 
