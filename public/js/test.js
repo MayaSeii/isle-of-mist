@@ -151,7 +151,7 @@ $(document).ready(async () => {
         checkAttackRange();
         resetButtons();
 
-        let skills = await getCharacterSkills(currentChar.cs_chr_id);
+        let skills = await getCharacterSkills(currentChar.chr_id);
 
         $('#charname').text(currentChar.chr_firstname);
         $('#chartitle').text(`${currentChar.chr_firstname}${currentChar.chr_lastname}, ${currentChar.chr_title}`);
@@ -478,11 +478,11 @@ function tileActions(xPos,yPos){
     
     let CurrentTile = board[yPos][xPos];
 
-        if(CurrentTile=="L"){ console.log("Lava");currentChar.mch_hp -= 1; }
+        if(CurrentTile=="L"){ console.log("Lava");}
         if(CurrentTile=="G"){ console.log("Grass"); }
         if(CurrentTile=="F"){ console.log("Forrest"); }
         if(CurrentTile=="W"){ console.log("Water"); }
 
-        updateMatchCharacter(currentChar.mch_id, currentChar);
+
 
 }
