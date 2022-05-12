@@ -332,7 +332,7 @@ $(document).ready(async () => {
     $('#btn-skill4').click(() => {
 
         reduceAP();
-
+        currentChar.mch_isgaurding = true;
         toggleDisable('btn-skill4', true);
         historyAP.push(1);
         updateHistory(4);
@@ -344,7 +344,8 @@ $(document).ready(async () => {
         currentChar.mch_positionx = $('#xpos').text();
         currentChar.mch_positiony = $('#ypos').text();
 
-        if (hasAttacked) enemyChar.mch_hp -= 1;
+        if (hasAttacked && enemyChar.mch_isgaurding == false) enemyChar.mch_hp -= 3;
+        else enemyChar.mch_hp -= 1;
 
         await updateMatchCharacter(currentChar.mch_id, currentChar);
         await updateMatchCharacter(enemyChar.mch_id, enemyChar);
@@ -389,7 +390,8 @@ $(document).ready(async () => {
         if (match.m_activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
-        hasAttacked = false
+        hasAttacked = false;
+        enemyChar.mch_isgaurding = false ;
 
     })
 
