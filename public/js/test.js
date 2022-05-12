@@ -376,11 +376,6 @@ $(document).ready(async () => {
 
         $('#ap').text(6);
 
-        if (parseInt($('#xpos').text()) == 1) toggleDisable('left', true);
-        if (parseInt($('#ypos').text()) == 1) toggleDisable('down', true);
-        if (parseInt($('#xpos').text()) == boardSize) toggleDisable('right', true);
-        if (parseInt($('#ypos').text()) == boardSize) toggleDisable('up', true);
-
         let tempMatch = await newTurn(match.m_id);
         match = tempMatch;
             
@@ -453,8 +448,8 @@ function resetButtons() {
 
     toggleDisable('up', apVal <= 0 || parseInt($('#ypos').text())==18);
     toggleDisable('down', apVal <= 0 || parseInt($('#ypos').text())==1);
-    toggleDisable('left', apVal <= 0 || parseInt($('#xpos').text())==1 );
-    toggleDisable('right', apVal <= 0 || parseInt($('#xpos').text())==18 );
+    toggleDisable('left', apVal <= 0 || parseInt($('#xpos').text())==1);
+    toggleDisable('right', apVal <= 0 || parseInt($('#xpos').text())==18);
     toggleDisable('btn-skill3', (apVal <= 0 && !canAttack) || hasAttacked);
     toggleDisable('btn-skill4', apVal <= 0);
 
@@ -463,9 +458,8 @@ function resetButtons() {
         toggleDisable('btn-undo', true);
         toggleDisable('btn-undoall', true);
 
-    }
+    } 
 
-    
 }
 
 function updateMovement(xPos,yPos){
@@ -474,6 +468,7 @@ function updateMovement(xPos,yPos){
         toggleDisable("rigth", xPos==18);
         toggleDisable("up", yPos==18);
         toggleDisable("down", yPos==11);
+
 }
 
 function tileActions(xPos,yPos){
@@ -484,7 +479,5 @@ function tileActions(xPos,yPos){
         if(CurrentTile=="G"){ console.log("Grass"); }
         if(CurrentTile=="F"){ console.log("Forrest"); }
         if(CurrentTile=="W"){ console.log("Water"); }
-
-
 
 }
