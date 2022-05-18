@@ -124,7 +124,7 @@ module.exports.updateMatchCharacter = async function(id, character) {
     try {
 
         let query = `UPDATE matchcharacter
-                     SET mch_positionx = $1, mch_positiony = $2, hp = $3
+                     SET mch_positionx = $1, mch_positiony = $2, mch_hp = $3
                      WHERE matchcharacter.mch_id = $4
                      RETURNING *`;
                      

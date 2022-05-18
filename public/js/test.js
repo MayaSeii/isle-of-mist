@@ -2,6 +2,8 @@ let historyX = [];
 let historyY = [];
 let historyAP = [0];
 let historySkills = [0];
+let xGrd = 10;
+let yGrd = 9;
 
 const MatchID = 25;
 
@@ -94,6 +96,7 @@ function draw() {
 
     ellipseMode(CORNER);
     noStroke();
+
 
     // Draws the player character.
     fill('white');
@@ -385,6 +388,8 @@ $(document).ready(async () => {
         if (match.m_activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
+        if (match.m_activeplayer == player1) GuardianMove();
+
         hasAttacked = false;
         enemyChar.mch_isgaurding = false ;
 
@@ -474,10 +479,56 @@ function updateMovement(xPos,yPos){
 function tileActions(xPos,yPos){
     
     let CurrentTile = board[yPos][xPos];
+    let apVal = parseInt($('#ap').text());
 
-        if(CurrentTile=="L"){ console.log("Lava");}
+        if(CurrentTile=="L"){ 
+
+            console.log("Lava");
+            currentChar.mch_hp -=1;
+            $('#hp').text(currentChar.mch_hp);
+
+        }
+
         if(CurrentTile=="G"){ console.log("Grass"); }
-        if(CurrentTile=="F"){ console.log("Forrest"); }
-        if(CurrentTile=="W"){ console.log("Water"); }
+
+        if(CurrentTile=="F"){ 
+            
+            console.log("Forest");
+
+            if(apVal>=2){
+                reduceAP();
+            }
+            else{ 
+
+                historyX.pop();
+                historyY.pop();
+                let toRestore = historyAP.pop();
+
+                $('#xpos').text(historyX[historyX.length - 1]);
+                $('#ypos').text(historyY[historyY.length - 1]);
+                $('#ap').text(parseInt($('#ap').text()) + toRestore);
+
+        }}
+
+        if(CurrentTile=="W"){ 
+            
+            console.log("Water");
+            
+            historyX.pop();
+            historyY.pop();
+            let toRestore = historyAP.pop();
+
+            $('#xpos').text(historyX[historyX.length - 1]);
+            $('#ypos').text(historyY[historyY.length - 1]);
+            $('#ap').text(parseInt($('#ap').text()) + toRestore);
+        
+        }
+
+}
+
+function GuardianMove(){
+
+    guardian.grd_positionx = guardian.grd_positionx + 1;
+    guardian.grd_positiony =  guardian.grd_positiony + 1;
 
 }
