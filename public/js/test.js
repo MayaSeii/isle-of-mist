@@ -2,8 +2,8 @@ let historyX = [];
 let historyY = [];
 let historyAP = [0];
 let historySkills = [0];
-let xGrd = 10;
-let yGrd = 9;
+
+let GrdTarget = false;
 
 const MatchID = 25;
 
@@ -97,7 +97,6 @@ function draw() {
     ellipseMode(CORNER);
     noStroke();
 
-
     // Draws the player character.
     fill('white');
     circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
@@ -109,6 +108,8 @@ function draw() {
     // Draws the Guardian.
     fill('purple');
     circle((guardian.grd_positionx - 2) * tileSize, (18 - guardian.grd_positiony - 1) * tileSize, tileSize * 3);
+
+    GuardianAttack()
 
 }
 
@@ -388,7 +389,16 @@ $(document).ready(async () => {
         if (match.m_activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
-        if (match.m_activeplayer == player1) GuardianMove();
+        GrdTarget = false
+
+        if (match.m_activeplayer == player1) {
+            
+            GuardianMove();
+
+            GrdTarget = true;
+
+        }
+            
 
         hasAttacked = false;
         enemyChar.mch_isgaurding = false ;
@@ -527,8 +537,38 @@ function tileActions(xPos,yPos){
 }
 
 function GuardianMove(){
+    
+    let min = Math.ceil(1);
+    let max = Math.floor(4);
+    let movedirection = Math.floor(Math.random() * (max - min + 1)) + min;
+    
+    if(movedirection == 1)
+    {
+        guardian.grd_positiony =  guardian.grd_positiony + 1;
+    }  
+    else if(movedirection == 2)
+    {
+        guardian.grd_positionx = guardian.grd_positionx + 1;
+    } 
+    else if(movedirection == 3)
+    {
+        guardian.grd_positionx = guardian.grd_positionx - 1;
+    } 
+    else if(movedirection == 4)
+    {
+        guardian.grd_positiony =  guardian.grd_positiony - 1;
+    } 
 
-    guardian.grd_positionx = guardian.grd_positionx + 1;
-    guardian.grd_positiony =  guardian.grd_positiony + 1;
+}
+
+function GuardianAttack(){
+
+    if(GrdTarget == true)
+    {
+
+    fill('blue');
+    circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
+
+    }
 
 }
