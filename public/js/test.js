@@ -97,6 +97,12 @@ function draw() {
     ellipseMode(CORNER);
     noStroke();
 
+    // Draws the health bar.
+    fill('green');
+
+    // Draws the AP bar.
+    fill('orange');
+
     // Draws the player character.
     fill('white');
     circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
