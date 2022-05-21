@@ -1,0 +1,16 @@
+html, body {
+
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}
+
+body {
+
+    background-color: black;
+    background: url('../img/forest-bg.png');
+    background-size: cover;
+    image-rendering: crisp-edges;
+
+}
