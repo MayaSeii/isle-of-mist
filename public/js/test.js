@@ -3,6 +3,8 @@ let historyY = [];
 let historyAP = [0];
 let historySkills = [0];
 
+let GrdTarget = false;
+
 const MatchID = 25;
 
 const boardSize = 18;
@@ -95,6 +97,12 @@ function draw() {
     ellipseMode(CORNER);
     noStroke();
 
+    // Draws the health bar.
+    fill('green');
+
+    // Draws the AP bar.
+    fill('orange');
+
     // Draws the player character.
     fill('white');
     circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
@@ -106,6 +114,8 @@ function draw() {
     // Draws the Guardian.
     fill('purple');
     circle((guardian.grd_positionx - 2) * tileSize, (18 - guardian.grd_positiony - 1) * tileSize, tileSize * 3);
+
+    GuardianAttack()
 
 }
 
@@ -332,7 +342,7 @@ $(document).ready(async () => {
     $('#btn-skill4').click(() => {
 
         reduceAP();
-
+        currentChar.mch_isgaurding = true;
         toggleDisable('btn-skill4', true);
         historyAP.push(1);
         updateHistory(4);
@@ -344,7 +354,8 @@ $(document).ready(async () => {
         currentChar.mch_positionx = $('#xpos').text();
         currentChar.mch_positiony = $('#ypos').text();
 
-        if (hasAttacked) enemyChar.mch_hp -= 1;
+        if (hasAttacked && enemyChar.mch_isgaurding == false) enemyChar.mch_hp -= 3;
+        else enemyChar.mch_hp -= 1;
 
         await updateMatchCharacter(currentChar.mch_id, currentChar);
         await updateMatchCharacter(enemyChar.mch_id, enemyChar);
@@ -375,11 +386,6 @@ $(document).ready(async () => {
 
         $('#ap').text(6);
 
-        if (parseInt($('#xpos').text()) == 1) toggleDisable('left', true);
-        if (parseInt($('#ypos').text()) == 1) toggleDisable('down', true);
-        if (parseInt($('#xpos').text()) == boardSize) toggleDisable('right', true);
-        if (parseInt($('#ypos').text()) == boardSize) toggleDisable('up', true);
-
         let tempMatch = await newTurn(match.m_id);
         match = tempMatch;
             
@@ -389,7 +395,19 @@ $(document).ready(async () => {
         if (match.m_activeplayer != currentPlayer) $(':button').prop('disabled', true);
         else $(':button').prop('disabled', false);
 
-        hasAttacked = false
+        GrdTarget = false
+
+        if (match.m_activeplayer == player1) {
+            
+            GuardianMove();
+
+            GrdTarget = true;
+
+        }
+            
+
+        hasAttacked = false;
+        enemyChar.mch_isgaurding = false ;
 
     })
 
@@ -451,8 +469,8 @@ function resetButtons() {
 
     toggleDisable('up', apVal <= 0 || parseInt($('#ypos').text())==18);
     toggleDisable('down', apVal <= 0 || parseInt($('#ypos').text())==1);
-    toggleDisable('left', apVal <= 0 || parseInt($('#xpos').text())==1 );
-    toggleDisable('right', apVal <= 0 || parseInt($('#xpos').text())==18 );
+    toggleDisable('left', apVal <= 0 || parseInt($('#xpos').text())==1);
+    toggleDisable('right', apVal <= 0 || parseInt($('#xpos').text())==18);
     toggleDisable('btn-skill3', (apVal <= 0 && !canAttack) || hasAttacked);
     toggleDisable('btn-skill4', apVal <= 0);
 
@@ -461,9 +479,8 @@ function resetButtons() {
         toggleDisable('btn-undo', true);
         toggleDisable('btn-undoall', true);
 
-    }
+    } 
 
-    
 }
 
 function updateMovement(xPos,yPos){
@@ -472,17 +489,92 @@ function updateMovement(xPos,yPos){
         toggleDisable("rigth", xPos==18);
         toggleDisable("up", yPos==18);
         toggleDisable("down", yPos==11);
+
 }
 
 function tileActions(xPos,yPos){
     
     let CurrentTile = board[yPos][xPos];
+    let apVal = parseInt($('#ap').text());
 
-        if(CurrentTile=="L"){ console.log("Lava");currentChar.hp -= 1; }
+        if(CurrentTile=="L"){ 
+
+            console.log("Lava");
+            currentChar.mch_hp -=1;
+            $('#hp').text(currentChar.mch_hp);
+
+        }
+
         if(CurrentTile=="G"){ console.log("Grass"); }
-        if(CurrentTile=="F"){ console.log("Forrest"); }
-        if(CurrentTile=="W"){ console.log("Water"); }
 
-        updateMatchCharacter(currentChar.mcid, currentChar);
+        if(CurrentTile=="F"){ 
+            
+            console.log("Forest");
+
+            if(apVal>=2){
+                reduceAP();
+            }
+            else{ 
+
+                historyX.pop();
+                historyY.pop();
+                let toRestore = historyAP.pop();
+
+                $('#xpos').text(historyX[historyX.length - 1]);
+                $('#ypos').text(historyY[historyY.length - 1]);
+                $('#ap').text(parseInt($('#ap').text()) + toRestore);
+
+        }}
+
+        if(CurrentTile=="W"){ 
+            
+            console.log("Water");
+            
+            historyX.pop();
+            historyY.pop();
+            let toRestore = historyAP.pop();
+
+            $('#xpos').text(historyX[historyX.length - 1]);
+            $('#ypos').text(historyY[historyY.length - 1]);
+            $('#ap').text(parseInt($('#ap').text()) + toRestore);
+        
+        }
+
+}
+
+function GuardianMove(){
+    
+    let min = Math.ceil(1);
+    let max = Math.floor(4);
+    let movedirection = Math.floor(Math.random() * (max - min + 1)) + min;
+    
+    if(movedirection == 1)
+    {
+        guardian.grd_positiony =  guardian.grd_positiony + 1;
+    }  
+    else if(movedirection == 2)
+    {
+        guardian.grd_positionx = guardian.grd_positionx + 1;
+    } 
+    else if(movedirection == 3)
+    {
+        guardian.grd_positionx = guardian.grd_positionx - 1;
+    } 
+    else if(movedirection == 4)
+    {
+        guardian.grd_positiony =  guardian.grd_positiony - 1;
+    } 
+
+}
+
+function GuardianAttack(){
+
+    if(GrdTarget == true)
+    {
+
+    fill('blue');
+    circle((parseInt($('#xpos').text()) - 1) * tileSize, (18 - parseInt($('#ypos').text())) * tileSize, tileSize);
+
+    }
 
 }
