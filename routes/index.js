@@ -15,8 +15,8 @@ router.get('/dashboard', (req, res) => {
   res.sendFile(path.resolve('public/dashboard.html'));
 });
 
-router.get('/game', (req, res) => {
-  res.sendFile(path.resolve('public/main.html'));
+router.get('/match', (req, res) => {
+  res.sendFile(path.resolve('public/match.html'));
 });
 
 // TODO: test game, remove later.

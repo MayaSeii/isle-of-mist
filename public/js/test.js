@@ -151,7 +151,7 @@ $(document).ready(async () => {
         checkAttackRange();
         resetButtons();
 
-        let skills = await getCharacterSkills(currentChar.cs_chr_id);
+        let skills = await getCharacterSkills(currentChar.chr_id);
 
         $('#charname').text(currentChar.chr_firstname);
         $('#chartitle').text(`${currentChar.chr_firstname}${currentChar.chr_lastname}, ${currentChar.chr_title}`);
