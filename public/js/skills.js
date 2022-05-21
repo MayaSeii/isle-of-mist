@@ -1,4 +1,4 @@
-class skills {
+class Skills {
    
     constructor(id,name, description,range,area,cost,damage ,target) {
         this.name = name;
@@ -11,6 +11,12 @@ class skills {
         this.target= target;
     }
 
+    
+
+    cost(){
+
+    }
+
     target(){
 
     }
@@ -20,7 +26,7 @@ class skills {
     }
 
     damage(){
-        
+
     }
 
 }
