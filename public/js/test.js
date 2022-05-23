@@ -110,7 +110,6 @@ function draw() {
     // Draws the enemy character.
     fill('red');
     circle((enemyChar.mch_positionx - 1) * tileSize, (18 - enemyChar.mch_positiony) * tileSize, tileSize);
-
     // Draws the Guardian.
     fill('purple');
     circle((guardian.grd_positionx - 2) * tileSize, (18 - guardian.grd_positiony - 1) * tileSize, tileSize * 3);
