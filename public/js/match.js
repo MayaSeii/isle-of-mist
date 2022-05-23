@@ -2,6 +2,7 @@ let canvas;
 
 function preload() {
 
+    UIManager.preload();
     AudioManager.preload();
 
 }

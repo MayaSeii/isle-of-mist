@@ -90,7 +90,7 @@ class Character {
         this.data.mch_positionx = tile.absolutePos.x + 1;
         this.data.mch_positiony = 18 - tile.absolutePos.y;
 
-        if (tile.type == "L") setTimeout(() => { this.hurt(); }, 180);
+        if (tile.type == "L" && this.data.chr_tile != "L") setTimeout(() => { this.hurt(1); }, 180);
 
         Character.selected = undefined;
 
@@ -116,7 +116,7 @@ class Character {
             // Highlights only if within valid distance, based on AP.
             let condition = tile.isWithinReach(this) && !tile.isOccupied();
 
-            if (this.data.chr_firstname != 'Alessia') condition &= tile.type != 'W';
+            if (this.data.chr_tile != 'W') condition &= tile.type != 'W';
 
             tile.highlight(condition);
 
@@ -124,9 +124,10 @@ class Character {
 
     }
 
-    hurt() {
+    hurt(value) {
 
         this.tintTimer = 1;
+        this.data.mch_hp -= value;
         AudioManager.playRandom(AudioManager.impact);
         AudioManager.damage[this.data.chr_firstname.toLowerCase()].play();
 
@@ -137,6 +138,10 @@ class Character {
 
         if (this.tintTimer > 0) {
             
+            // Little hop animation.
+            this.div.position(this.div.position().x, this.div.position().y + 5);
+            setTimeout(() => { this.div.position(this.div.position().x, this.div.position().y - 5); }, 50);
+
             tint(255, 255 * (1 - this.tintTimer), 255 * (1 - this.tintTimer));
             this.tintTimer -= 0.1;
 
