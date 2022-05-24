@@ -48,12 +48,14 @@ async function updateData() {
 
 }
 
-function setup() {
+async function setup() {
 
     var myCanvas = createCanvas(boardSize * tileSize, boardSize * tileSize);
     myCanvas.parent('board');
 
     setInterval(updateData, 500);
+
+    await GameManager.setup(25);
 
 }
 
@@ -135,7 +137,14 @@ $(document).ready(async () => {
         currentPlayer = player1;
         enemyPlayer = player2;
 
-        loadPage(); 
+        await GameManager.loadPlayerCharacters(GameManager.match.m_playeroneid);
+        await GameManager.loadPlayerCharacters(GameManager.match.m_playertwoid);
+
+        loadPage();
+
+        let s = await getSkill(12);
+        this.skill = new Skills(s);
+        this.skill.skillaction(GameManager.characters[2], GameManager.characters[4]);
     
     });
 
