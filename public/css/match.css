@@ -12,5 +12,24 @@ body {
     background: url('../img/forest-bg.png');
     background-size: cover;
     image-rendering: crisp-edges;
+    cursor: url('../img/cursors/idle.png'), auto;	
+
+}
+
+.char {
+
+    cursor: url('../img/cursors/char.png'), auto;
+
+}
+
+.aim {
+
+    cursor: url('../img/cursors/aim.png') 24 24, auto;
+
+}
+
+.not-allowed {
+
+    cursor: url('../img/cursors/not-allowed.png'), auto;
 
 }

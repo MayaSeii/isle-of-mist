@@ -1,7 +1,5 @@
 class Board {
 
-    constructor() { }
-
     async init(size, matchID) {
 
         this.size = size;
@@ -80,9 +78,8 @@ class Board {
 
             if (xCheck && yCheck) {
 
-                this.tileArray.forEach(tile => tile.select(false));
+                this.tileArray.forEach(t => { if (t != tile) t.select(false); });
                 tile.clicked();
-                return;
 
             }
 

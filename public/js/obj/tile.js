@@ -1,6 +1,6 @@
 class Tile {
 
-    static size = 32;
+    static size = 48;
 
     constructor(position, type, boardSize) {
 
@@ -8,7 +8,9 @@ class Tile {
         this.absolutePos = { x: position.x, y: position.y };
         this.type = type;
         this.boardSize = boardSize;
+
         this.selected = false;
+        this.highlighted = false;
 
         this.createTileDiv();
         
@@ -19,42 +21,21 @@ class Tile {
         const cx = this.position.x + (window.innerWidth / 2 - Tile.size * (this.boardSize / 2));   
         const cy = this.position.y + (window.innerHeight / 2 - Tile.size * (this.boardSize / 2)); 
 
+        const random = this.type == 'G' ? Math.floor(Math.random() * 4) : '';
+
         // Creates a div with the appropriate position.
         this.div = createDiv();
         this.div.position(cx, cy);
 
         // Sets the CSS style for each tile.
-        this.div.style('width', `${Tile.size - 2}px`);
-        this.div.style('height', `${Tile.size - 2}px`);
-        this.div.style('background-image', `url(../img/tiles/${this.type}.png)`); 
-        this.div.style('border', '1px solid #00000050'); 
+        this.div.style('width', `${Tile.size}px`);
+        this.div.style('height', `${Tile.size}px`);
+        this.div.style('background-image', `url(../img/tiles/${this.type}${random}.png)`); 
+        this.div.style('background-size', `cover`); 
+        this.div.style('outline', `2px solid #00000055`); 
+        this.div.style('outline-offset', `-1.5px`);
+        this.div.style('z-index', this.type == 'G' ? '-2' : '-1');
         
-        // Prioritises special tiles.
-        if (this.type == 'G') this.div.style('z-index', `-3`);  
-        else this.div.style('z-index', `-2`);
-
-        this.drawBorderTiles();
-        
-    }
-
-    drawBorderTiles() {
-
-        let border = undefined;
-
-        // Border tiles.
-        if (this.absolutePos.x == 0) border = 'left';
-        else if (this.absolutePos.y == 0) border = 'top';
-        else if (this.absolutePos.x >= GameManager.boardSize - 1) border = 'right';
-        else if (this.absolutePos.y >= GameManager.boardSize - 1) border = 'bottom';
-
-        // Corner tiles.
-        if (this.absolutePos.x == 0 && this.absolutePos.y == 0) border = 'topleft';
-        else if (this.absolutePos.x == 0 && this.absolutePos.y == GameManager.boardSize - 1) border = 'bottomleft';
-        else if (this.absolutePos.x == GameManager.boardSize - 1 && this.absolutePos.y == GameManager.boardSize - 1) border = 'bottomright';
-        else if (this.absolutePos.x == GameManager.boardSize - 1 && this.absolutePos.y == 0) border = 'topright';
-
-        if (border != undefined) this.div.style('mask', `url(../img/mask_${border}.png)`);
-
     }
 
     draw() {
@@ -67,17 +48,88 @@ class Tile {
 
     clicked() {
 
-        this.select(true);  
+        if (Character.selected != undefined) {
+
+            if (!this.highlighted) {
+                
+                Character.selected = undefined;
+                AudioManager.playRandom(AudioManager.notAllowed);
+
+            } else Character.selected.move(this);
+            
+            GameManager.board.tileArray.forEach(tile => tile.highlight(false));
+
+        } else {
+            
+            this.select(!this.selected);
+            AudioManager.playRandom(AudioManager.tileSelect);
+            
+        }
 
     }
 
+    /**
+     * Toggles tile selection (used to show tile details).
+     * @param {boolean} selected - Whether to select the tile.
+     */
     select(selected) {
 
-        if (selected) this.div.style('filter', 'sepia(100%)');
-        else this.div.style('filter', 'sepia(0%)');
-
+        this.highlighted = false;
         this.selected = selected;
 
+        if (selected) this.div.style('filter', 'sepia(100%) saturate(300%)');
+        else this.div.style('filter', 'sepia(0%) saturate(100%)');
+
     }
+
+    /**
+     * Toggles tile highlighting (used to show ranges).
+     * @param {boolean} highlighted - Whether to highlight the tile.
+     */
+    highlight(highlighted) {
+
+        this.selected = false;
+        this.highlighted = highlighted;
+
+        if (highlighted) this.div.style('filter', 'sepia(100%) hue-rotate(190deg) saturate(300%)');
+        else this.div.style('filter', 'sepia(0%) hue-rotate(0deg) saturate(100%)');
+
+    }
+
+    /** 
+     * Checks if the tile is occupied by a character.
+     * @returns {boolean} - True if the the tile is occupied, false otherwise.
+     */
+    isOccupied() {
+
+        let occupied = false;
+
+        GameManager.characters.forEach(char => {
+
+            const cx = char.data.mch_positionx - 1;
+            const cy = 18 - char.data.mch_positiony;
+
+            if ((cx == this.absolutePos.x) && (cy == this.absolutePos.y)) occupied = true;
+
+        });
+
+        return occupied;
+
+    }
+
+    /**
+     * Returns whether the tile is within a character's AP reach.
+     * @param {Character} char - The character object to compare the tile to.
+     * @returns {boolean} - True if the character is within the character's AP reach, false otherwise.
+     */
+    isWithinReach(char) {
+
+        const ap = char.data.mch_ap;
+        const px = char.data.mch_positionx - 1;
+        const py = 18 - char.data.mch_positiony;
+
+        return (Math.abs(px - this.absolutePos.x) + Math.abs(py - this.absolutePos.y)) <= ap;
+
+    } 
 
 }

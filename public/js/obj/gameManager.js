@@ -27,7 +27,8 @@ class GameManager {
 
         return (this.board != undefined) &&
                (this.board.tileArray != undefined) &&
-               (this.guardian != undefined);
+               (this.guardian != undefined) &&
+               (this.characters.length >= 6);
 
     }
 
@@ -70,7 +71,7 @@ class GameManager {
             if (xCheck && yCheck) {
 
                 char.clicked();
-                return charClicked = true;
+                charClicked = true;
 
             }
 

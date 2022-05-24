@@ -1,5 +1,12 @@
 let canvas;
 
+function preload() {
+
+    UIManager.preload();
+    AudioManager.preload();
+
+}
+
 async function setup() {
 
     // Sets up the game and UI managers.
@@ -9,6 +16,12 @@ async function setup() {
     // Creates the canvas.
     canvas = createCanvas(window.innerWidth, window.innerHeight);
 
+    let canvasElement = canvas.elt;
+    let context = canvasElement.getContext('2d');
+    context.webkitImageSmoothingEnabled = false;
+    context.msImageSmoothingEnabled = false;
+    context.imageSmoothingEnabled = false;
+
     // Loads each player's characters.
     await GameManager.loadPlayerCharacters(GameManager.match.m_playeroneid);
     await GameManager.loadPlayerCharacters(GameManager.match.m_playertwoid);
@@ -16,6 +29,8 @@ async function setup() {
 }
 
 function draw() {
+
+    clear();
 
     // Checks if the board is ready.
     if (!GameManager.isReady()) return;
