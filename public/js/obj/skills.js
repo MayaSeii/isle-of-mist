@@ -79,7 +79,6 @@ class Skills {
 
         damagedChar.data.mch_hp -= totaldamage;
         console.log('success')
-        await updateMatchCharacter(damagedChar.mch_id, damagedChar);
 
     }
 
