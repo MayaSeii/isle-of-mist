@@ -142,7 +142,7 @@ $(document).ready(async () => {
 
         loadPage();
 
-        let s = await getSkill(12);
+        let s = await getSkill(9);
         this.skill = new Skills(s);
         this.skill.skillaction(GameManager.characters[2], GameManager.characters[4]);
     
