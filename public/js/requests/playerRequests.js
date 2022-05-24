@@ -15,6 +15,24 @@ async function getPlayerCharacters(id) {
 
 }
 
+async function getPlayer(id) {
+
+    try {
+
+        const response = await fetch(`/api/players/${id}`);
+
+        if (response.status == 200) {
+
+            var player = await response.json();
+            return player;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+
+}
+
 async function getPlayerByName(name) {
 
     try {

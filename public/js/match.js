@@ -9,22 +9,20 @@ function preload() {
 
 async function setup() {
 
+    let TEST_DELETE_LATER = 23;
+
     // Sets up the game and UI managers.
-    await GameManager.setup(25);
-    UIManager.setup();
+    await GameManager.setup(25, TEST_DELETE_LATER);
 
     // Creates the canvas.
     canvas = createCanvas(window.innerWidth, window.innerHeight);
-
-    let canvasElement = canvas.elt;
-    let context = canvasElement.getContext('2d');
-    context.webkitImageSmoothingEnabled = false;
-    context.msImageSmoothingEnabled = false;
-    context.imageSmoothingEnabled = false;
+    this.setupCanvas();
 
     // Loads each player's characters.
     await GameManager.loadPlayerCharacters(GameManager.match.m_playeroneid);
     await GameManager.loadPlayerCharacters(GameManager.match.m_playertwoid);
+    
+    UIManager.setup();
 
 }
 
@@ -43,12 +41,23 @@ function draw() {
 function mouseClicked() {
 
     if (!GameManager.isReady()) return;
-    GameManager.clickHandler(mouseX, mouseY);
+    GameManager.clickHandler();
 
 }
 
 function windowResized() {
     
     resizeCanvas(window.innerWidth, window.innerHeight);
-    
+    GameManager.windowResized();
+
+}
+
+function setupCanvas() {
+
+    let canvasElement = canvas.elt;
+    let context = canvasElement.getContext('2d');
+    context.webkitImageSmoothingEnabled = false;
+    context.msImageSmoothingEnabled = false;
+    context.imageSmoothingEnabled = false;
+
 }

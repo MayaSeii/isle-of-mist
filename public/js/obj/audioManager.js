@@ -7,26 +7,34 @@ class AudioManager {
     static impact;
     static damage;
 
-    static preload() {
+    static audioContext;
 
-        AudioManager.characterClick = loadSound('../audio/char_click.wav');
-        AudioManager.notAllowed = loadSound('../audio/not_allowed.wav');
-        AudioManager.characterMove = loadSound('../audio/char_move.wav');
-        AudioManager.tileSelect = loadSound('../audio/tile_select.wav');
-        AudioManager.impact = loadSound('../audio/impact.wav');
+    static preload() {
+ 
+        AudioManager.characterClick = new Howl({ src: '../audio/char_click.wav' });
+        AudioManager.notAllowed = new Howl({ src: '../audio/not_allowed.wav' });
+        AudioManager.characterMove = new Howl({ src: '../audio/char_move.wav' });
+        AudioManager.tileSelect = new Howl({ src: '../audio/tile_select.wav' });
+        AudioManager.impact = new Howl({ src: '../audio/impact.wav' });
+        AudioManager.cancel = new Howl({ src: '../audio/cancel.wav' });
 
         AudioManager.damage = new Object();
-        AudioManager.damage['seii'] = loadSound('../audio/seii_damage.wav');
-        AudioManager.damage['alessia'] = loadSound('../audio/alessia_damage.wav');
-        AudioManager.damage['scarlet'] = loadSound('../audio/scarlet_damage.wav');
-        AudioManager.damage['zodan'] = loadSound('../audio/zodan_damage.wav');
-        AudioManager.damage['shinsuke'] = loadSound('../audio/shinsuke_damage.wav');
-        AudioManager.damage['gobbo'] = loadSound('../audio/gobbo_damage.wav');
+        AudioManager.damage['seii'] = new Howl({ src: '../audio/seii_damage.wav' });
+        AudioManager.damage['alessia'] = new Howl({ src: '../audio/alessia_damage.wav' });
+        AudioManager.damage['scarlet'] = new Howl({ src: '../audio/scarlet_damage.wav' });
+        AudioManager.damage['zodan'] = new Howl({ src: '../audio/zodan_damage.wav' });
+        AudioManager.damage['shinsuke'] = new Howl({ src: '../audio/shinsuke_damage.wav' });
+        AudioManager.damage['gobbo'] = new Howl({ src: '../audio/gobbo_damage.wav' });
+
+        AudioManager.skill = new Object();
+        AudioManager.skill['attack'] = new Howl({ src: '../audio/skill_attack.wav' });
+        AudioManager.skill['guard'] = new Howl({ src: '../audio/skill_guard.wav' });
 
     }
 
     static playRandom(clip) {
 
+        clip.stop();
         clip.rate(getRandomFloat(0.9, 1.1, 2));
         clip.play();
 

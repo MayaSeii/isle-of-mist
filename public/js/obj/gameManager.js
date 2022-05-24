@@ -1,5 +1,6 @@
 class GameManager {
 
+    static player;
     static board;
     static boardSize = 18;
 
@@ -7,11 +8,14 @@ class GameManager {
      * Prepares and loads the necessary elements for the game to work.
      * @param {number} matchID - The database ID of the match to initialise.
      */
-    static async setup(matchID) {
+    static async setup(matchID, playerID) {
 
         // Creates the match and board.
         this.match = await getMatch(matchID);
         this.board = await Board.create(this.boardSize, matchID);
+
+        // Loads the player.
+        this.player = await getPlayer(playerID);
 
         // Retrieves the Guardian.
         let guardian = await getMatchGuardian(matchID);
@@ -52,34 +56,24 @@ class GameManager {
 
     }
 
-    static clickHandler(mouseX, mouseY) {
+    /** Handles mouse click events. */
+    static clickHandler() {
+        
+        let char = this.characters.find(c => 
+            isMouseOver((c.data.mch_positionx - 1) * Tile.size, (GameManager.boardSize - c.data.mch_positiony) * Tile.size)
+        );
+        
+        if (char != undefined) return char.clicked();
 
-        let charClicked = false;
+        this.board.clicked();
 
-        this.characters.forEach(char => {
+    }
 
-            let centerWidth = window.innerWidth / 2 - Tile.size * (this.boardSize / 2);   
-            let centerHeight = window.innerHeight / 2 - Tile.size * (this.boardSize / 2);
+    /** Handles window resizing. */
+    static windowResized() {
 
-            let posX = centerWidth + (char.data.mch_positionx - 1) * Tile.size;
-            let posY = centerHeight + (this.boardSize - char.data.mch_positiony) * Tile.size;
-
-            // Compensates for the centred board.
-            let xCheck = mouseX >= posX && mouseX < posX + Tile.size;
-            let yCheck = mouseY >= posY && mouseY < posY + Tile.size;
-
-            if (xCheck && yCheck) {
-
-                char.clicked();
-                charClicked = true;
-
-            }
-
-        });
-
-        if (charClicked) return;
-
-        this.board.clicked(mouseX, mouseY);
+        // Prevents character lerping on windows resize.
+        this.characters.forEach(char => char.getFirstPosition());
 
     }
 

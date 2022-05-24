@@ -16,7 +16,7 @@ body {
 
 }
 
-.char {
+.char, .skill {
 
     cursor: url('../img/cursors/char.png'), auto;
 
@@ -24,7 +24,19 @@ body {
 
 .aim {
 
-    cursor: url('../img/cursors/aim.png') 24 24, auto;
+    cursor: url('../img/cursors/aim.png') 24 24, auto !important;
+
+}
+
+.aim-ally {
+
+    cursor: url('../img/cursors/aim-ally.png') 24 24, auto !important;
+
+}
+
+.aim-enemy {
+
+    cursor: url('../img/cursors/aim-enemy.png') 24 24, auto !important;
 
 }
 

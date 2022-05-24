@@ -60,23 +60,13 @@ class Board {
 
     }
 
-    clicked(mouseX, mouseY) {
+    clicked() {
 
         if (this.tileArray == undefined) return;
         
         this.tileArray.forEach(tile => {
 
-            let centerWidth = window.innerWidth / 2 - Tile.size * (this.size / 2);   
-            let centerHeight = window.innerHeight / 2 - Tile.size * (this.size / 2);
-
-            let posX = centerWidth + tile.position.x;
-            let posY = centerHeight + tile.position.y;
-
-            // Compensates for the centred board.
-            let xCheck = mouseX >= posX && mouseX < posX + Tile.size;
-            let yCheck = mouseY >= posY && mouseY < posY + Tile.size;
-
-            if (xCheck && yCheck) {
+            if (isMouseOver(tile.position.x, tile.position.y)) {
 
                 this.tileArray.forEach(t => { if (t != tile) t.select(false); });
                 tile.clicked();
