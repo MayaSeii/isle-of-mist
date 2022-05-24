@@ -95,3 +95,20 @@ async function newTurn(id) {
     } catch (err) { console.log(err); }
 
 }
+
+async function getMatchCharacter(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}`);
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

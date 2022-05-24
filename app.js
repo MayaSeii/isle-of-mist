@@ -11,6 +11,7 @@ var usersRouter = require('./routes/users');
 var charactersRouter = require('./routes/characterRoutes');
 var matchesRouter = require('./routes/matchRoutes');
 var playersRouter = require('./routes/playerRoutes');
+var skillsRouter = require('./routes/skillRoutes');
 
 var app = express();
 
@@ -25,5 +26,6 @@ app.use('/users', usersRouter);
 app.use('/api/characters', charactersRouter);
 app.use('/api/matches', matchesRouter);
 app.use('/api/players', playersRouter);
+app.use('/api/skills', skillsRouter);
 
 module.exports = app;
