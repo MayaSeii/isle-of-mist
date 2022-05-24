@@ -1,6 +1,8 @@
 class Character {
 
     static selected;
+    static attacking;
+    static haveAttacked = [];
 
     /**
      * Creates a new character.
@@ -19,7 +21,7 @@ class Character {
         this.div = createDiv();
         this.div.style('width', '48px');
         this.div.style('height', '48px');
-        this.div.addClass('char');
+        this.div.addClass(this.data.mch_ply_id == GameManager.player.ply_id ? 'char' : 'not-allowed');
 
         this.tintTimer = 0;
 
@@ -54,23 +56,31 @@ class Character {
 
     clicked() {
 
-        if (this.data.mch_ap <= 0) {
+        if (Character.attacking != undefined) {
 
-            // Plays the "not allowed" sound effect.
+            if (this.isAdjacent(Character.attacking) && Character.attacking != this) this.getAttacked();
+            else AudioManager.playRandom(AudioManager.notAllowed);
+            return;
+
+        }
+
+        if (this.data.mch_ply_id != GameManager.player.ply_id)
             return AudioManager.playRandom(AudioManager.notAllowed);
+
+        if (this.data.mch_ap <= 0)
+            return AudioManager.playRandom(AudioManager.notAllowed);
+
+        // Unselects a character if already selected.
+        if (Character.selected == this) {
+
+            AudioManager.playRandom(AudioManager.cancel);
+            Character.selected = undefined;
+            return GameManager.board.tileArray.forEach(tile => tile.highlight(false));
 
         }
 
         // Plays the sound effect.
         AudioManager.playRandom(AudioManager.characterClick);
-
-        // Unselects a character if already selected.
-        if (Character.selected == this) {
-
-            Character.selected = undefined;
-            return GameManager.board.tileArray.forEach(tile => tile.highlight(false));
-
-        }
 
         this.validateMovementTiles();
 
@@ -98,7 +108,9 @@ class Character {
 
     reduceAP(value) {
 
-        this.data.mch_ap -= value;
+        if (this.data.mch_ap <= 0) return;
+
+        this.data.mch_ap = Math.max(0, this.data.mch_ap - value);
 
         if (this.data.mch_ap <= 0) {
             
@@ -114,7 +126,7 @@ class Character {
         GameManager.board.tileArray.forEach(tile => {
 
             // Highlights only if within valid distance, based on AP.
-            let condition = tile.isWithinReach(this) && !tile.isOccupied();
+            let condition = tile.isWithinReach(this) && !tile.isOccupied() && !tile.isOccupiedByGuardian();
 
             if (this.data.chr_tile != 'W') condition &= tile.type != 'W';
 
@@ -124,11 +136,18 @@ class Character {
 
     }
 
+    /**
+     * Hurts the character, reducing their HP by a certain amount.
+     * @param {number} value - The HP to deduct from the player.
+     */
     hurt(value) {
 
+        if (this.data.mch_hp <= 0) return;
+
         this.tintTimer = 1;
-        this.data.mch_hp -= value;
+        this.data.mch_hp = Math.max(0, this.data.mch_hp - value);
         AudioManager.playRandom(AudioManager.impact);
+        AudioManager.damage[this.data.chr_firstname.toLowerCase()].stop();
         AudioManager.damage[this.data.chr_firstname.toLowerCase()].play();
 
     }
@@ -161,6 +180,90 @@ class Character {
         });
 
         this.div.position(tile.div.position().x, tile.div.position().y);
+
+    }
+
+    attack() {
+
+        if (Character.haveAttacked.includes(this))
+            return AudioManager.playRandom(AudioManager.notAllowed);
+
+        if (Character.attacking != this) this.initiateAttack();
+        else this.cancelAttack();
+
+    }
+
+    guard() {
+
+        if (this.data.mch_isguarding)
+            return AudioManager.playRandom(AudioManager.notAllowed);
+
+        this.data.mch_isguarding = true;
+        this.reduceAP(1);
+        AudioManager.playRandom(AudioManager.characterClick);
+        AudioManager.playRandom(AudioManager.skill['guard']);
+
+    }
+
+    initiateAttack() {
+
+        Character.attacking = this;
+        AudioManager.playRandom(AudioManager.skill['attack']);
+        AudioManager.playRandom(AudioManager.characterClick);
+
+        $('body > *').addClass('aim');
+
+        GameManager.characters.forEach(char => {
+
+            if (this.isAdjacent(char)) {
+
+                if (char.data.mch_ply_id == this.data.mch_ply_id) char.div.addClass('aim-ally');
+                else char.div.addClass('aim-enemy');
+
+            }
+
+        });
+
+    }
+
+    isAdjacent(char) {
+
+        return (char.data.mch_positionx == this.data.mch_positionx + 1) && (char.data.mch_positiony == this.data.mch_positiony) ||
+               (char.data.mch_positionx == this.data.mch_positionx - 1) && (char.data.mch_positiony == this.data.mch_positiony) ||
+               (char.data.mch_positiony == this.data.mch_positiony + 1) && (char.data.mch_positionx == this.data.mch_positionx) ||
+               (char.data.mch_positiony == this.data.mch_positiony - 1) && (char.data.mch_positionx == this.data.mch_positionx);
+
+    }
+
+    cancelAttack() {
+
+        Character.attacking = undefined;
+        AudioManager.playRandom(AudioManager.cancel);
+
+        // Clears all aiming cursors.
+        $('body > *').removeClass('aim');
+        $('body > *').removeClass('aim-ally');
+        $('body > *').removeClass('aim-enemy');
+
+    }
+
+    getAttacked() {
+
+        let damage = getRandomInt(1, 8) + Character.attacking.data.chr_baseatk;
+        
+        if (this.data.mch_isguarding) {
+
+            damage = Math.max(0, damage - 3);
+            AudioManager.playRandom(AudioManager.skill['guard']);
+
+        }
+
+        this.hurt(damage);
+
+        Character.haveAttacked.push(Character.attacking);
+
+        Character.attacking.reduceAP(1);
+        Character.attacking.cancelAttack();
 
     }
 

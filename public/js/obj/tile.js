@@ -48,12 +48,15 @@ class Tile {
 
     clicked() {
 
+        if (Character.attacking != undefined)
+            return AudioManager.playRandom(AudioManager.notAllowed);
+
         if (Character.selected != undefined) {
 
             if (!this.highlighted) {
                 
                 Character.selected = undefined;
-                AudioManager.playRandom(AudioManager.notAllowed);
+                AudioManager.playRandom(AudioManager.cancel);
 
             } else Character.selected.move(this);
             
@@ -114,6 +117,28 @@ class Tile {
         });
 
         return occupied;
+
+    }
+
+    /**
+     * Checks if the tile is occupied by the Guardian.
+     * Since the Guardian occupies a 3x3 square of tiles, adjacent tiles are checked.
+     * @returns {boolean} - True if the Guardian occupies the tile, false otherwise.
+     */
+    isOccupiedByGuardian() {
+
+        const gx = GameManager.guardian.data.grd_positionx - 1;
+        const gy = 18 - GameManager.guardian.data.grd_positiony;
+
+        return (gx == this.absolutePos.x) && (gy == this.absolutePos.y) ||
+               (gx == this.absolutePos.x + 1) && (gy == this.absolutePos.y) ||
+               (gx == this.absolutePos.x - 1) && (gy == this.absolutePos.y) ||
+               (gx == this.absolutePos.x) && (gy == this.absolutePos.y + 1) ||
+               (gx == this.absolutePos.x + 1) && (gy == this.absolutePos.y + 1) ||
+               (gx == this.absolutePos.x - 1) && (gy == this.absolutePos.y + 1) ||
+               (gx == this.absolutePos.x) && (gy == this.absolutePos.y - 1) ||
+               (gx == this.absolutePos.x + 1) && (gy == this.absolutePos.y - 1) ||
+               (gx == this.absolutePos.x - 1) && (gy == this.absolutePos.y - 1);
 
     }
 

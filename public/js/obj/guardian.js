@@ -14,8 +14,8 @@ class Guardian {
         let py = 18 - this.data.grd_positiony;
     
         // Gets the tile underneath the player for precise positioning.
-        const tile = GameManager.board.tileArray.find(tile => { 
-            return tile.absolutePos.x == px && tile.absolutePos.y == py 
+        const tile = GameManager.board.tileArray.find(t => { 
+            return t.absolutePos.x == px && t.absolutePos.y == py 
         });
 
         // Repurposes the position variables for the final positions.
