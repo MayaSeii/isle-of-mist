@@ -60,6 +60,17 @@ router.post('/characters/:id/resetAP/:player', async function(req, res, next) {
 
 });
 
+router.post('/characters/:id/hurt/:skill/:dmg', async function(req, res, next) {
+
+    let id = req.params.id;
+    let skill = req.params.skill;
+    let dmg = req.params.dmg;
+
+    let result = await mModel.hurtMatchCharacter(id, skill, dmg);
+    res.status(result.status).send(result.result);
+
+});
+
 router.post('/characters/:id/move/', async function(req, res, next) {
 
     let id = req.params.id;

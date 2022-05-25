@@ -15,6 +15,7 @@ class UIManager {
 
     static buttonNextTurn;
 
+    static nextTurnDiv;
     static attackDivs = [];
     static guardDivs = [];
 
@@ -26,20 +27,24 @@ class UIManager {
 
     static setup() {
 
-        this.paneBG = loadImage('../img/pane-bg.png');
+        this.paneBG = loadImage('../img/pane-bg-new.png');
         this.attackSprite = loadImage('../img/skills/attack.png');
         this.guardSprite = loadImage('../img/skills/guard.png');
         this.attackSpriteInactive = loadImage('../img/skills/attack_inactive.png');
         this.guardSpriteInactive = loadImage('../img/skills/guard_inactive.png');
         this.buttonNextTurn = loadImage('../img/btn-turn.png');
         this.createCharacterInfoDivs();
+        this.createNextTurnDiv();
 
-        let testDiv = createDiv();
-        testDiv.position(60, 600);
-        testDiv.style('width', Tile.size + 'px');
-        testDiv.style('height', Tile.size + 'px');
-        testDiv.style('background-color', 'red');
-        testDiv.mousePressed(GameManager.endTurn);
+    }
+
+    static createNextTurnDiv() {
+
+        this.nextTurnDiv = createDiv();
+        this.nextTurnDiv.style('width', '400px');
+        this.nextTurnDiv.style('height', '64px');
+        this.nextTurnDiv.mousePressed(GameManager.endTurn);
+        this.nextTurnDiv.addClass('end-turn');
 
     }
 
@@ -85,6 +90,13 @@ class UIManager {
         let centerX = window.innerWidth / 2 - board.size * halfSize - this.leftPaneWidth - tileSize;
         let centerY = window.innerHeight / 2 - board.size * halfSize;
         image(this.paneBG, centerX, centerY);
+
+        // Next turn button.
+        image(this.buttonNextTurn, centerX, this.paneBG.height + centerY + 16)
+
+        // Corrects the turn button div's position.
+        if (this.nextTurnDiv.position().y !=  this.paneBG.height + centerY + 16 || this.nextTurnDiv.position().x != centerX)
+            this.nextTurnDiv.position(centerX, this.paneBG.height + centerY + 16);
 
         // Right pane.
         centerX = window.innerWidth / 2 + board.size * halfSize + tileSize;
@@ -233,10 +245,10 @@ class UIManager {
      */
     static shadedText(txt, x, y) {
 
-        fill(Colours.textShadow);
+        fill(Colours.white);
         text(txt, x, y + 4);
 
-        fill(Colours.white);
+        fill(Colours.textShadow);
         text(txt, x, y);
 
     }

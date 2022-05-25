@@ -98,8 +98,10 @@ class GameManager {
     static async endTurn() {
 
         if (!GameManager.isPlayersTurn()) return;
-        GameManager.match = await newTurn(GameManager.match.m_id);
 
+        AudioManager.playRandom(AudioManager.endTurn);
+
+        GameManager.match = await newTurn(GameManager.match.m_id);
         GameManager.characters.forEach(char => char.resetAP(GameManager.match.m_activeplayer));
 
     }

@@ -146,8 +146,6 @@ module.exports.updateMatchCharacter = async function(id, character) {
 
 }
 
-
-
 module.exports.getMatchCharacterSkillsById = async function(id) {
 
     try {
@@ -246,6 +244,36 @@ module.exports.moveMatchCharacter = async function(id, posX, posY) {
                      
                      
         let result = await pool.query(query, [id, posX, posY]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.hurtMatchCharacter = async function(id, skillId, dmg) {
+
+    try {
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_hp = GREATEST(0, mch_hp - ((FLOOR(RANDOM() * (s.skl_dicetype - 1 + 1)) + 1) + $3))
+                     FROM character c CROSS JOIN skill s
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     AND s.skl_id = $2
+                     RETURNING mc.*, c.*`;
+                     
+        let result = await pool.query(query, [id, skillId, dmg]);
 
         if (result.rows.length > 0) {
 

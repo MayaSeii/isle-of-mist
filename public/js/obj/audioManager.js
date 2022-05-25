@@ -17,6 +17,7 @@ class AudioManager {
         AudioManager.tileSelect = new Howl({ src: '../audio/tile_select.wav' });
         AudioManager.impact = new Howl({ src: '../audio/impact.wav' });
         AudioManager.cancel = new Howl({ src: '../audio/cancel.wav' });
+        AudioManager.endTurn = new Howl({ src: '../audio/end_turn.wav' });
 
         AudioManager.damage = new Object();
         AudioManager.damage['seii'] = new Howl({ src: '../audio/seii_damage.wav' });

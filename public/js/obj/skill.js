@@ -6,9 +6,9 @@ class Skill {
 
     }
 
-    markAsUsed() {
+    async markAsUsed() {
 
-        this.data.mcs_canuse = false;
+        this.data = await markSkillAsUsed(this.data.mcs_mch_id, this.data.skl_id);
         
     }
 

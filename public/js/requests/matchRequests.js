@@ -155,7 +155,7 @@ async function resetMatchCharacterAP(id, activePlayer) {
 
 }
 
-async function moveMatchCharater(id, posX, posY) {
+async function moveMatchCharacter(id, posX, posY) {
 
     try {
 
@@ -167,6 +167,31 @@ async function moveMatchCharater(id, posX, posY) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ posX: posX, posY: posY })
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function hurtMatchCharacter(id, skill, dmg) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}/hurt/${skill}/${dmg}`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
 
         });
 
