@@ -112,3 +112,71 @@ async function getMatchCharacter(id) {
     } catch (err) { console.log(err); }
 
 }
+
+async function getMatchCharacterSkills(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}/skills`);
+
+        if (response.status == 200) {
+
+            var skills = await response.json();
+            return skills;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function resetMatchCharacterAP(id, activePlayer) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}/resetAP/${activePlayer}`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function moveMatchCharater(id, posX, posY) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}/move`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ posX: posX, posY: posY })
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

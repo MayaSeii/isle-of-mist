@@ -9,7 +9,7 @@ function preload() {
 
 async function setup() {
 
-    let TEST_DELETE_LATER = 23;
+    let TEST_DELETE_LATER = 24;
 
     // Sets up the game and UI managers.
     await GameManager.setup(25, TEST_DELETE_LATER);
