@@ -50,6 +50,46 @@ router.post('/characters/:id', async function(req, res, next) {
 
 });
 
+router.post('/characters/:id/resetAP/:player', async function(req, res, next) {
+
+    let id = req.params.id;
+    let player = req.params.player;
+
+    let result = await mModel.resetMatchCharacterAP(id, player);
+    res.status(result.status).send(result.result);
+
+});
+
+router.post('/characters/:id/hurt/:skill/:dmg', async function(req, res, next) {
+
+    let id = req.params.id;
+    let skill = req.params.skill;
+    let dmg = req.params.dmg;
+
+    let result = await mModel.hurtMatchCharacter(id, skill, dmg);
+    res.status(result.status).send(result.result);
+
+});
+
+router.post('/characters/:id/move/', async function(req, res, next) {
+
+    let id = req.params.id;
+    let posX = req.body.posX;
+    let posY = req.body.posY;
+
+    let result = await mModel.moveMatchCharacter(id, posX, posY);
+    res.status(result.status).send(result.result);
+
+});
+
+router.get('/characters/:id/skills', async function(req, res, next) {
+
+    let id = req.params.id;
+    let result = await mModel.getMatchCharacterSkillsById(id);
+    res.status(result.status).send(result.result);
+
+});
+
 router.post('/:id/newTurn', async function(req, res, next) {
 
     let id = req.params.id;

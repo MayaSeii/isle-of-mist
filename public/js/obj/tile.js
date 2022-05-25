@@ -46,7 +46,7 @@ class Tile {
         this.div.position(cx, cy);
     }
 
-    clicked() {
+    async clicked() {
 
         if (Character.attacking != undefined)
             return AudioManager.playRandom(AudioManager.notAllowed);
@@ -58,7 +58,7 @@ class Tile {
                 Character.selected = undefined;
                 AudioManager.playRandom(AudioManager.cancel);
 
-            } else Character.selected.move(this);
+            } else await Character.selected.move(this);
             
             GameManager.board.tileArray.forEach(tile => tile.highlight(false));
 

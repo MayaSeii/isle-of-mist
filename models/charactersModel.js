@@ -67,28 +67,3 @@ module.exports.getCharacterSkills = async function(id) {
     }
 
 }
-
-module.exports.getMatchCharacterSkillById = async function(id) {
-
-    try {
-
-        let query = `SELECT * FROM matchcharacterskill
-                     INNER JOIN  matchcharacter ON  matchcharacter.mch_id = matchcharacterskill.mcs_mch_id
-                     WHERE matchcharacter.mch_id = $1`;
-                     
-        let result = await pool.query(query, [id]);
-
-        if (result.rows.length > 0) {
-
-            let skills = result.rows;
-            return { status: 200, result: skills };
-
-        } else return { status: 404, result: { msg: "No character with that ID!" } };
-
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-
-    }
-}

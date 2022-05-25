@@ -17,4 +17,14 @@ router.get('/:id', async function(req, res, next) {
     
 });
 
+router.post('/match/:id/:charId', async function(req, res, next) {
+
+    let id = req.params.id;
+    let charId = req.params.charId;
+
+    let result = await sModel.markSkillAsUsed(charId, id);
+    res.status(result.status).send(result.result);
+
+});
+
 module.exports = router;

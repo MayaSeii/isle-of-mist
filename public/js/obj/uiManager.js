@@ -15,6 +15,10 @@ class UIManager {
 
     static buttonNextTurn;
 
+    static nextTurnDiv;
+    static attackDivs = [];
+    static guardDivs = [];
+
     static preload() {
 
         this.font = loadFont('../fonts/font.ttf');
@@ -23,13 +27,24 @@ class UIManager {
 
     static setup() {
 
-        this.paneBG = loadImage('../img/pane-bg.png');
+        this.paneBG = loadImage('../img/pane-bg-new.png');
         this.attackSprite = loadImage('../img/skills/attack.png');
         this.guardSprite = loadImage('../img/skills/guard.png');
         this.attackSpriteInactive = loadImage('../img/skills/attack_inactive.png');
         this.guardSpriteInactive = loadImage('../img/skills/guard_inactive.png');
         this.buttonNextTurn = loadImage('../img/btn-turn.png');
         this.createCharacterInfoDivs();
+        this.createNextTurnDiv();
+
+    }
+
+    static createNextTurnDiv() {
+
+        this.nextTurnDiv = createDiv();
+        this.nextTurnDiv.style('width', '400px');
+        this.nextTurnDiv.style('height', '64px');
+        this.nextTurnDiv.mousePressed(GameManager.endTurn);
+        this.nextTurnDiv.addClass('end-turn');
 
     }
 
@@ -43,17 +58,22 @@ class UIManager {
 
         const spacing = 144;
 
-        for (let i = 0; i < GameManager.characters.length; i++) {
+        let i = 0;
 
-            if (GameManager.characters[i].data.mch_ply_id != GameManager.player.ply_id)
-                return;
+        GameManager.characters.forEach(char => {
 
-            let id = GameManager.characters[i].data.mch_id;
+            if (char.data.mch_ply_id == GameManager.player.ply_id) {
+                
+                let id = char.data.mch_id;
 
-            this.createSkillDiv(px, py + 48 + spacing * i, () => { this.attackClick(id) });
-            this.createSkillDiv(px + 48, py + 48 + spacing * i, () => { this.guardClick(id)});
+                this.attackDivs[i] = this.createSkillDiv(px, py + 48 + spacing * i, () => { this.attackClick(id) });
+                this.guardDivs[i] = this.createSkillDiv(px + 48, py + 48 + spacing * i, () => { this.guardClick(id)});
 
-        }
+                i++;
+
+            }
+
+        })
 
     }
 
@@ -64,12 +84,19 @@ class UIManager {
         const tileSize = Tile.size;
         const halfSize = tileSize / 2;
 
-        fill("WHITE");
+        fill(Colours.white);
 
         // Left pane.
         let centerX = window.innerWidth / 2 - board.size * halfSize - this.leftPaneWidth - tileSize;
         let centerY = window.innerHeight / 2 - board.size * halfSize;
         image(this.paneBG, centerX, centerY);
+
+        // Next turn button.
+        image(this.buttonNextTurn, centerX, this.paneBG.height + centerY + 16)
+
+        // Corrects the turn button div's position.
+        if (this.nextTurnDiv.position().y !=  this.paneBG.height + centerY + 16 || this.nextTurnDiv.position().x != centerX)
+            this.nextTurnDiv.position(centerX, this.paneBG.height + centerY + 16);
 
         // Right pane.
         centerX = window.innerWidth / 2 + board.size * halfSize + tileSize;
@@ -107,9 +134,20 @@ class UIManager {
             this.drawHealthBar(char, px + 64, py + 20 + spacing * i);
             this.drawAPBar(char, px + 64, py + 30 + spacing * i);
 
+            const skillAttack = char.skills.find(s => s.data.skl_name == 'Attack');
+            const skillGuard = char.skills.find(s => s.data.skl_name == 'Guard');
+
             // Draws the skill icons.
-            image(Character.haveAttacked.includes(char) ? this.attackSpriteInactive : this.attackSprite, px, py + 48 + spacing * i, Tile.size, Tile.size);
-            image(char.data.mch_isguarding ? this.guardSpriteInactive : this.guardSprite, px + 48, py + 48 + spacing * i, Tile.size, Tile.size);
+            image(skillAttack.hasBeenUsed() || char.data.mch_ap < skillAttack.data.skl_cost ? this.attackSpriteInactive : this.attackSprite, px, py + 48 + spacing * i, Tile.size, Tile.size);
+            image(skillGuard.hasBeenUsed() || char.data.mch_ap < skillGuard.data.skl_cost ? this.guardSpriteInactive : this.guardSprite, px + 48, py + 48 + spacing * i, Tile.size, Tile.size);
+
+            if (GameManager.characters[i].data.mch_ply_id == GameManager.player.ply_id) {
+
+                // Updates the div's position.
+                this.attackDivs[i].position(px, py + 48 + spacing * i);
+                this.guardDivs[i].position(px + 48, py + 48 + spacing * i);
+
+            }
 
             i++;
 
@@ -132,12 +170,14 @@ class UIManager {
 
     static attackClick(id) {
 
+        if (!GameManager.isPlayersTurn()) return;
         GameManager.characters.find(char => char.data.mch_id == id).attack();
 
     }
 
     static guardClick(id) {
 
+        if (!GameManager.isPlayersTurn()) return;
         GameManager.characters.find(char => char.data.mch_id == id).guard();
 
     }
@@ -205,10 +245,10 @@ class UIManager {
      */
     static shadedText(txt, x, y) {
 
-        fill(Colours.textShadow);
+        fill(Colours.white);
         text(txt, x, y + 4);
 
-        fill(Colours.white);
+        fill(Colours.textShadow);
         text(txt, x, y);
 
     }

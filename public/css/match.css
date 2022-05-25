@@ -22,6 +22,12 @@ body {
 
 }
 
+.end-turn {
+
+    cursor: url('../img/cursors/end-turn.png'), auto;
+
+}
+
 .aim {
 
     cursor: url('../img/cursors/aim.png') 24 24, auto !important;
