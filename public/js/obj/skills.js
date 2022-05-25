@@ -72,10 +72,6 @@ class Skills {
         let yPos = currentChar.data.mch_positiony;
         let xPosEnemy = enemyChar.data.mch_positionx;
         let yPosEnemy = enemyChar.data.mch_positiony;
-        console.log(xPos)
-        console.log(xPosEnemy)
-        console.log(yPos)
-        console.log(yPosEnemy)
 
             if(xPos >= xPosEnemy + this.data.skl_range && yPos==yPosEnemy) this.rangeBool=true;
             else if(xPos <= xPosEnemy - this.data.skl_range && yPos==yPosEnemy) this.rangeBool=true;

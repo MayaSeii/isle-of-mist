@@ -55,7 +55,7 @@ async function setup() {
 
     setInterval(updateData, 500);
 
-    await GameManager.setup(25);
+    await GameManager.setup(25, 23);
 
 }
 
