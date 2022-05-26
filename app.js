@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var charactersRouter = require('./routes/characterRoutes');
+var matchCharactersRouter = require('./routes/matchCharacterRoutes');
 var matchesRouter = require('./routes/matchRoutes');
 var playersRouter = require('./routes/playerRoutes');
 var skillsRouter = require('./routes/skillRoutes');
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/characters', charactersRouter);
+app.use('/api/matchcharacters', matchCharactersRouter);
 app.use('/api/matches', matchesRouter);
 app.use('/api/players', playersRouter);
 app.use('/api/skills', skillsRouter);

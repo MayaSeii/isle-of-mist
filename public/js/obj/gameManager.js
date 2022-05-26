@@ -51,9 +51,13 @@ class GameManager {
 
         for (const char of chars) {
 
-            let newChar = new Character(char);
-            await newChar.loadSkills();
-            this.characters.push(newChar);
+            //if (char.mch_hp > 0) {
+
+                let newChar = new Character(char);
+                await newChar.loadSkills();
+                this.characters.push(newChar);
+
+            //}
 
         }
 

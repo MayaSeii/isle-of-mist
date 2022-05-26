@@ -274,6 +274,8 @@ class Character {
         skill.markAsUsed();
         Character.attacking.cancelAttack();
 
+        if (this.data.mch_isrecovering) GameManager.characters.splice(GameManager.characters.indexOf(this), 1);
+
     }
 
     /** Resets the character's AP to 6 or 7, depending on the Boon. */
