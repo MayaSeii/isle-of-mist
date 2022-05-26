@@ -110,7 +110,7 @@ class Character {
         this.data.mch_positiony = 18 - tile.absolutePos.y;
         this.data = await moveMatchCharacter(this.data.mch_id, tile.absolutePos.x + 1, 18 - tile.absolutePos.y);
 
-        if (tile.type == "L" && this.data.chr_tile != "L") setTimeout(() => { this.hurt(1); }, 180);
+        if (tile.type == "L" && this.data.chr_tile != "L") setTimeout(() => { this.hurt(); }, 180);
 
         Character.selected = undefined;
 
@@ -147,15 +147,13 @@ class Character {
     }
 
     /**
-     * Hurts the character, reducing their HP by a certain amount.
-     * @param {number} value - The HP to deduct from the player.
+     * Shows the character being hurt; this DOES NOT affect the database (actual HP).
      */
-    hurt(value = 0) {
+    hurt() {
 
         if (this.data.mch_hp <= 0) return;
 
         this.tintTimer = 1;
-        this.data.mch_hp = Math.max(0, this.data.mch_hp - value);
         AudioManager.playRandom(AudioManager.impact);
         AudioManager.damage[this.data.chr_firstname.toLowerCase()].stop();
         AudioManager.damage[this.data.chr_firstname.toLowerCase()].play();
@@ -215,7 +213,8 @@ class Character {
             return AudioManager.playRandom(AudioManager.notAllowed);
 
         skill.markAsUsed();
-        this.data.mch_isguarding = true;
+
+        guardMatchCharacters(this.data.mch_id);
         this.reduceAP(skill.data.skl_cost);
 
         AudioManager.playRandom(AudioManager.characterClick);
@@ -270,7 +269,7 @@ class Character {
         this.hurt();
 
         let skill = Character.attacking.skills.find(s => s.data.skl_name == 'Attack');
-        this.data = await hurtMatchCharacter(this.data.mch_id, skill.data.skl_id, Character.attacking.data.chr_baseatk);
+        this.data = await hurtMatchCharacter(this.data.mch_id, skill.data.skl_id, Character.attacking.data.chr_baseatk - (this.data.mch_isguarding ? 3 : 0));
 
         skill.markAsUsed();
         Character.attacking.cancelAttack();

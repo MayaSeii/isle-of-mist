@@ -205,3 +205,28 @@ async function hurtMatchCharacter(id, skill, dmg) {
     } catch (err) { console.log(err); }
 
 }
+
+async function guardMatchCharacters(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/characters/${id}/guard`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

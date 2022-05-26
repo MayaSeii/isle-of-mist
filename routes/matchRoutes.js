@@ -90,6 +90,14 @@ router.get('/characters/:id/skills', async function(req, res, next) {
 
 });
 
+router.get('/characters/:id/guard', async function(req, res, next) {
+
+    let id = req.params.id;
+    let result = await mModel.guardMatchCharacter(id);
+    res.status(result.status).send(result.result);
+
+});
+
 router.post('/:id/newTurn', async function(req, res, next) {
 
     let id = req.params.id;

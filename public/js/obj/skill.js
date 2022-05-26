@@ -12,6 +12,12 @@ class Skill {
         
     }
 
+    async markAsUnused() {
+
+        this.data = await markSkillAsUnused(this.data.mcs_mch_id, this.data.skl_id);
+        
+    }
+
     hasBeenUsed() {
 
         return !this.data.mcs_canuse;

@@ -205,7 +205,8 @@ module.exports.resetMatchCharacterAP = async function(id, activePlayer) {
     try {
 
         let query = `UPDATE matchcharacter mc
-                     SET mch_ap = CASE WHEN mch_ply_id = $2 THEN CASE WHEN mch_hasboon = TRUE THEN 7 ELSE 6 END ELSE mch_ap END
+                     SET mch_ap = CASE WHEN mch_ply_id = $2 THEN CASE WHEN mch_hasboon = TRUE THEN 7 ELSE 6 END ELSE mch_ap END,
+                         mch_isguarding =  CASE WHEN mch_ply_id = $2 THEN FALSE ELSE mch_isguarding END
                      FROM character c
                      WHERE mc.mch_chr_id = c.chr_id
                      AND mc.mch_id = $1
@@ -274,6 +275,36 @@ module.exports.hurtMatchCharacter = async function(id, skillId, dmg) {
                      RETURNING mc.*, c.*`;
                      
         let result = await pool.query(query, [id, skillId, dmg]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.guardMatchCharacter = async function(id) {
+
+    try {
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_isguarding = CASE WHEN mch_ap < 1 THEN FALSE ELSE TRUE END,
+                         mch_ap = CASE WHEN mch_ap < 1 THEN mch_ap ELSE mch_ap - 1 END
+                     FROM character c
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id]);
 
         if (result.rows.length > 0) {
 

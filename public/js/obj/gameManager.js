@@ -4,11 +4,16 @@ class GameManager {
     static board;
     static boardSize = 18;
 
+    static playerID;
+
     /**
      * Prepares and loads the necessary elements for the game to work.
      * @param {number} matchID - The database ID of the match to initialise.
      */
     static async setup(matchID, playerID) {
+
+        let pid = window.location.href.split('/');
+        pid = playerID[playerID.length - 1];
 
         // Creates the match and board.
         this.match = await getMatch(matchID);
@@ -100,6 +105,17 @@ class GameManager {
         if (!GameManager.isPlayersTurn()) return;
 
         AudioManager.playRandom(AudioManager.endTurn);
+
+        for (const char of GameManager.characters) {
+
+            if (char.data.mch_ply_id == GameManager.player.ply_id) {
+
+                await char.skills.find(s => s.data.skl_name == 'Attack').markAsUnused();
+                await char.skills.find(s => s.data.skl_name == 'Guard').markAsUnused();
+
+            }
+
+        }
 
         GameManager.match = await newTurn(GameManager.match.m_id);
         GameManager.characters.forEach(char => char.resetAP(GameManager.match.m_activeplayer));
