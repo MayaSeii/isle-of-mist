@@ -24,17 +24,8 @@ class Character {
         this.div.addClass(this.data.mch_ply_id == GameManager.player.ply_id ? 'char' : 'not-allowed');
 
         this.tintTimer = 0;
-        this.skills = [];
 
         this.getFirstPosition();
-
-    }
-
-    /** Loads the character's skills. */
-    async loadSkills() {
-        
-        let skills = await getMatchCharacterSkills(this.data.mch_id);
-        skills.forEach(skill => this.skills.push(new Skill(skill)));
 
     }
 
@@ -97,7 +88,7 @@ class Character {
 
     }
 
-    async move(tile) {
+    move(tile) {
 
         AudioManager.playRandom(AudioManager.characterMove);
 
@@ -108,7 +99,6 @@ class Character {
 
         this.data.mch_positionx = tile.absolutePos.x + 1;
         this.data.mch_positiony = 18 - tile.absolutePos.y;
-        this.data = await moveMatchCharacter(this.data.mch_id, tile.absolutePos.x + 1, 18 - tile.absolutePos.y);
 
         if (tile.type == "L" && this.data.chr_tile != "L") setTimeout(() => { this.hurt(1); }, 180);
 
@@ -150,7 +140,7 @@ class Character {
      * Hurts the character, reducing their HP by a certain amount.
      * @param {number} value - The HP to deduct from the player.
      */
-    hurt(value = 0) {
+    hurt(value) {
 
         if (this.data.mch_hp <= 0) return;
 
@@ -193,13 +183,9 @@ class Character {
 
     }
 
-    /** Validates the attack before attacking. */
     attack() {
 
-        let skill = this.skills.find(s => s.data.skl_name == 'Attack');
-
-        // Checks if the attack can be used.
-        if (skill.hasBeenUsed() || this.data.mch_ap < skill.data.skl_cost)
+        if (Character.haveAttacked.includes(this))
             return AudioManager.playRandom(AudioManager.notAllowed);
 
         if (Character.attacking != this) this.initiateAttack();
@@ -209,15 +195,11 @@ class Character {
 
     guard() {
 
-        let skill = this.skills.find(s => s.data.skl_name == 'Guard');
-
-        if (skill.hasBeenUsed() || this.data.mch_ap <= skill.data.skl_cost)
+        if (this.data.mch_isguarding)
             return AudioManager.playRandom(AudioManager.notAllowed);
 
-        skill.markAsUsed();
         this.data.mch_isguarding = true;
-        this.reduceAP(skill.data.skl_cost);
-
+        this.reduceAP(1);
         AudioManager.playRandom(AudioManager.characterClick);
         AudioManager.playRandom(AudioManager.skill['guard']);
 
@@ -265,22 +247,23 @@ class Character {
 
     }
 
-    async getAttacked() {
+    getAttacked() {
 
-        this.hurt();
+        let damage = getRandomInt(1, 8) + Character.attacking.data.chr_baseatk;
+        
+        if (this.data.mch_isguarding) {
 
-        let skill = Character.attacking.skills.find(s => s.data.skl_name == 'Attack');
-        this.data = await hurtMatchCharacter(this.data.mch_id, skill.data.skl_id, Character.attacking.data.chr_baseatk);
+            damage = Math.max(0, damage - 3);
+            AudioManager.playRandom(AudioManager.skill['guard']);
 
-        skill.markAsUsed();
+        }
+
+        this.hurt(damage);
+
+        Character.haveAttacked.push(Character.attacking);
+
+        Character.attacking.reduceAP(1);
         Character.attacking.cancelAttack();
-
-    }
-
-    /** Resets the character's AP to 6 or 7, depending on the Boon. */
-    async resetAP(activePlayer) {
-
-        this.data = await resetMatchCharacterAP(this.data.mch_id, activePlayer);
 
     }
 
