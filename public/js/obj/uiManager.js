@@ -66,8 +66,8 @@ class UIManager {
                 
                 let id = char.data.mch_id;
 
-                this.attackDivs[i] = this.createSkillDiv(px, py + 48 + spacing * i, () => { this.attackClick(id) });
-                this.guardDivs[i] = this.createSkillDiv(px + 48, py + 48 + spacing * i, () => { this.guardClick(id)});
+                this.attackDivs[char.data.chr_name] = this.createSkillDiv(px, py + 48 + spacing * i, () => { this.attackClick(id) });
+                this.guardDivs[char.data.chr_name] = this.createSkillDiv(px + 48, py + 48 + spacing * i, () => { this.guardClick(id)});
 
                 i++;
 
@@ -106,6 +106,7 @@ class UIManager {
 
     }
 
+    /** Draws info regarding all characters. */
     static drawCharacterInfo() {
 
         const tileSize = Tile.size;
@@ -121,8 +122,9 @@ class UIManager {
 
         let i = 0;
 
-        GameManager.characters.forEach(char => {
+        GameManager.characters.filter(c => !c.isDead()).forEach(char => {
 
+            // Enemy characters only get a small health bar.
             if (char.data.mch_ply_id != GameManager.player.ply_id)
                 return this.drawSmallHealthBar(char);
 
@@ -141,13 +143,9 @@ class UIManager {
             image(skillAttack.hasBeenUsed() || char.data.mch_ap < skillAttack.data.skl_cost ? this.attackSpriteInactive : this.attackSprite, px, py + 48 + spacing * i, Tile.size, Tile.size);
             image(skillGuard.hasBeenUsed() || char.data.mch_ap < skillGuard.data.skl_cost ? this.guardSpriteInactive : this.guardSprite, px + 48, py + 48 + spacing * i, Tile.size, Tile.size);
 
-            if (GameManager.characters[i].data.mch_ply_id == GameManager.player.ply_id) {
-
-                // Updates the div's position.
-                this.attackDivs[i].position(px, py + 48 + spacing * i);
-                this.guardDivs[i].position(px + 48, py + 48 + spacing * i);
-
-            }
+            // Updates the div's position.
+            this.attackDivs[char.data.chr_name].position(px, py + 48 + spacing * i);
+            this.guardDivs[char.data.chr_name].position(px + 48, py + 48 + spacing * i);
 
             i++;
 

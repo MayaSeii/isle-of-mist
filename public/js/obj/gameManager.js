@@ -12,9 +12,6 @@ class GameManager {
      */
     static async setup(matchID, playerID) {
 
-        let pid = window.location.href.split('/');
-        pid = playerID[playerID.length - 1];
-
         // Creates the match and board.
         this.match = await getMatch(matchID);
         this.board = await Board.create(this.boardSize, matchID);
@@ -51,13 +48,9 @@ class GameManager {
 
         for (const char of chars) {
 
-            //if (char.mch_hp > 0) {
-
-                let newChar = new Character(char);
-                await newChar.loadSkills();
-                this.characters.push(newChar);
-
-            //}
+            let newChar = new Character(char);
+            await newChar.loadSkills();
+            this.characters.push(newChar);
 
         }
 
@@ -123,6 +116,62 @@ class GameManager {
 
         GameManager.match = await newTurn(GameManager.match.m_id);
         GameManager.characters.forEach(char => char.resetAP(GameManager.match.m_activeplayer));
+
+    }
+
+    static checkLoss() {
+
+        let loses = true;
+
+        GameManager.characters.filter(c => c.data.mch_ply_id == GameManager.player.ply_id).forEach(char => {
+
+            loses = loses && char.isDead();
+
+        });
+
+        return loses;
+
+    }
+
+    static checkWin() {
+
+        let wins = true;
+
+        GameManager.characters.filter(c => c.data.mch_ply_id != GameManager.player.ply_id).forEach(char => {
+
+            wins = wins && char.isDead();
+
+        });
+
+        return wins;
+
+    }
+
+    static async reloadPlayerCharacters(playerID) {
+
+        const chars = await getPlayerCharacters(playerID);
+
+        for (const char of chars) {
+
+            let oldChar = GameManager.characters.find(c => c.data.mch_id == char.mch_id);
+
+            oldChar.data = char;
+            await oldChar.loadSkills();
+
+        }
+
+    }
+
+    static async refresh() {
+
+        await GameManager.reloadPlayerCharacters(GameManager.match.m_playeroneid);
+        await GameManager.reloadPlayerCharacters(GameManager.match.m_playertwoid);
+
+        if (GameManager.checkLoss()) alert('You lose!');
+        if (GameManager.checkWin()) alert('You win!');
+
+        const activePlayer = await getMatchActivePlayer(GameManager.match.m_id);
+        GameManager.match.m_activeplayer = activePlayer.m_activeplayer;
 
     }
 

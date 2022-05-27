@@ -42,6 +42,29 @@ module.exports.getMatchById = async function(id) {
 
 }
 
+module.exports.getMatchActivePlayer = async function(id) {
+
+    try {
+
+        let query = 'SELECT m_activeplayer FROM match WHERE m_id = $1';
+        let result = await pool.query(query, [id]);
+
+        if (result.rows.length > 0) {
+
+            let playerId = result.rows[0];
+            return { status: 200, result: playerId };
+
+        } else return { status: 404, result: { msg: "No match with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
 module.exports.getMatchArena = async function(id) {
 
     try {

@@ -41,6 +41,8 @@ class Character {
     /** Draws the character on the board. */
     draw() {
 
+        if (this.isDead()) return;
+
         // Tile positions start at 0, meaning subtracting 1 is necessary.
         const px = this.data.mch_positionx - 1;
         const py = 18 - this.data.mch_positiony;
@@ -64,6 +66,8 @@ class Character {
     }
 
     clicked() {
+
+        if (this.isDead()) return;
 
         if (Character.attacking != undefined) {
 
@@ -99,6 +103,8 @@ class Character {
 
     async move(tile) {
 
+        if (this.isDead()) return;
+
         AudioManager.playRandom(AudioManager.characterMove);
 
         const px = this.data.mch_positionx - 1;
@@ -118,6 +124,8 @@ class Character {
 
     reduceAP(value) {
 
+        if (this.isDead()) return;
+
         if (this.data.mch_ap <= 0) return;
 
         this.data.mch_ap = Math.max(0, this.data.mch_ap - value);
@@ -132,6 +140,8 @@ class Character {
     }
 
     validateMovementTiles() {
+
+        if (this.isDead()) return;
 
         GameManager.board.tileArray.forEach(tile => {
 
@@ -151,7 +161,7 @@ class Character {
      */
     hurt() {
 
-        if (this.data.mch_hp <= 0) return;
+        if (this.isDead()) return;
 
         this.tintTimer = 1;
         AudioManager.playRandom(AudioManager.impact);
@@ -162,6 +172,8 @@ class Character {
 
     /** Tints the image red when hurt. */
     updateHurtTint() {
+
+        if (this.isDead()) return;
 
         if (this.tintTimer > 0) {
             
@@ -179,6 +191,8 @@ class Character {
     /** Avoids lerping the when loading the page. */
     getFirstPosition() {
 
+        if (this.isDead()) return;
+
         const px = this.data.mch_positionx - 1;
         const py = 18 - this.data.mch_positiony;
 
@@ -194,6 +208,8 @@ class Character {
     /** Validates the attack before attacking. */
     attack() {
 
+        if (this.isDead()) return;
+
         let skill = this.skills.find(s => s.data.skl_name == 'Attack');
 
         // Checks if the attack can be used.
@@ -206,6 +222,8 @@ class Character {
     }
 
     guard() {
+
+        if (this.isDead()) return;
 
         let skill = this.skills.find(s => s.data.skl_name == 'Guard');
 
@@ -223,6 +241,8 @@ class Character {
     }
 
     initiateAttack() {
+
+        if (this.isDead()) return;
 
         Character.attacking = this;
         AudioManager.playRandom(AudioManager.skill['attack']);
@@ -245,6 +265,8 @@ class Character {
 
     isAdjacent(char) {
 
+        if (this.isDead()) return;
+
         return (char.data.mch_positionx == this.data.mch_positionx + 1) && (char.data.mch_positiony == this.data.mch_positiony) ||
                (char.data.mch_positionx == this.data.mch_positionx - 1) && (char.data.mch_positiony == this.data.mch_positiony) ||
                (char.data.mch_positiony == this.data.mch_positiony + 1) && (char.data.mch_positionx == this.data.mch_positionx) ||
@@ -264,6 +286,8 @@ class Character {
 
     cancelAttack() {
 
+        if (this.isDead()) return;
+
         Character.attacking = undefined;
         AudioManager.playRandom(AudioManager.cancel);
 
@@ -276,6 +300,8 @@ class Character {
 
     async getAttacked() {
 
+        if (this.isDead()) return;
+
         this.hurt();
 
         let skill = Character.attacking.skills.find(s => s.data.skl_name == 'Attack');
@@ -284,13 +310,14 @@ class Character {
         skill.markAsUsed();
         Character.attacking.cancelAttack();
 
-        if (this.data.mch_isrecovering) GameManager.characters.splice(GameManager.characters.indexOf(this), 1);
+        if (this.isDead()) this.div.remove();
 
     }
 
     /** Resets the character's AP to 6 or 7, depending on the Boon. */
     async resetAP(activePlayer) {
 
+        if (this.isDead()) return;
         this.data = await resetMatchCharacterAP(this.data.mch_id, activePlayer);
 
     }

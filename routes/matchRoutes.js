@@ -17,6 +17,14 @@ router.get('/:id', async function(req, res, next) {
     
 });
 
+router.get('/:id/activeplayer', async function(req, res, next) {
+
+    let id = req.params.id;
+    let result = await mModel.getMatchActivePlayer(id);
+    res.status(result.status).send(result.result);
+    
+});
+
 router.get('/:id/arena', async function(req, res, next) {
 
     let id = req.params.id;

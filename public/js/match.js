@@ -9,7 +9,7 @@ function preload() {
 
 async function setup() {
 
-    let TEST_DELETE_LATER = 23;
+    let TEST_DELETE_LATER = sessionStorage.getItem('playerId') || 23;
 
     // Sets up the game and UI managers.
     await GameManager.setup(25, TEST_DELETE_LATER);
@@ -23,6 +23,8 @@ async function setup() {
     await GameManager.loadPlayerCharacters(GameManager.match.m_playertwoid);
     
     UIManager.setup();
+
+    setInterval(GameManager.refresh, 500)
 
 }
 

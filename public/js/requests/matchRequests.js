@@ -15,6 +15,23 @@ async function getMatch(id) {
 
 }
 
+async function getMatchActivePlayer(id) {
+
+    try {
+
+        const response = await fetch(`/api/matches/${id}/activeplayer`);
+
+        if (response.status == 200) {
+
+            var playerID = await response.json();
+            return playerID;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
 async function getMatchArena(id) {
 
     try {

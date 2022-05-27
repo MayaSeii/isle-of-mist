@@ -112,7 +112,7 @@ class Tile {
             const cx = char.data.mch_positionx - 1;
             const cy = 18 - char.data.mch_positiony;
 
-            if ((cx == this.absolutePos.x) && (cy == this.absolutePos.y)) occupied = true;
+            if ((cx == this.absolutePos.x) && (cy == this.absolutePos.y) && (!char.isDead())) occupied = true;
 
         });
 
