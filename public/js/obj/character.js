@@ -252,6 +252,16 @@ class Character {
 
     }
 
+    /**
+     * Checks if the character is dead (HP equal to or below 0).
+     * @returns {bool} - True if the character is dead, false otherwise.
+     */
+    isDead() {
+
+        return this.data.mch_hp <= 0;
+
+    }
+
     cancelAttack() {
 
         Character.attacking = undefined;
