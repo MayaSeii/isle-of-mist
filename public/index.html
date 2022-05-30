@@ -7,11 +7,14 @@
         <title>Isle of Mist - Login</title>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="./css/lib/toastr.min.css" />
+        <!-- Page Icon -->
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="./css/lib/toastr.min.css" />
         <link rel="stylesheet" href="./css/login.css" />
 
+        <!-- Icon Set -->
         <script src="https://kit.fontawesome.com/d1c951a24f.js" crossorigin="anonymous"></script>
 
     </head>
@@ -26,6 +29,7 @@
 
                 <form id="login-form">
 
+                    <!-- Username input. -->
                     <div class="input-group">
 
                         <div class="input-label"><i class="fa-solid fa-user"></i></div>
@@ -33,6 +37,7 @@
 
                     </div>
 
+                    <!-- Password input. -->
                     <div class="input-group" style="margin-top: .5rem;">
 
                         <div class="input-label"><i class="fa-solid fa-key"></i></div>
@@ -40,6 +45,7 @@
 
                     </div>
 
+                    <!-- Password confirmation input, only shown during account registration. -->
                     <div id="group-confirm">
 
                         <div class="input-group" style="margin-top: .5rem;">
@@ -51,8 +57,10 @@
 
                     </div>
 
-                    <span id="verification">Invalid username or password! Please try again.</span>
+                    <!-- Span to show verification errors. -->
+                    <span id="verification"></span>
 
+                    <!-- Group only shown if the user is logging in. -->
                     <div id="group-login">
 
                         <button id="btn-login">Login</button>
@@ -60,10 +68,11 @@
 
                     </div>
 
+                    <!-- Group only shown if the user is registering an account. -->
                     <div id="group-register">
 
                         <button id="btn-register">Register</button>
-                        <span id="have-account">Already have an account? <a onclick="showLogin()">Login here.</a></span>
+                        <span id="have-account">Already have an account?s <a onclick="showLogin()">Login here.</a></span>
 
                     </div>
 
@@ -72,10 +81,16 @@
             </div>
 
         </div>
+        
+        <!-- Libraries -->
+        <script type="application/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
+        <script type="application/javascript" src="./js/lib/toastr.min.js"></script>
 
-        <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
-        <script type="text/javascript" src="./js/lib/toastr.min.js"></script>
-        <script type="text/javascript" src="./js/login.js"></script>
+        <!-- Request Script -->
+        <script type="application/javascript" src="./js/requests/playerRequests.js"></script>
+
+        <!-- Page Script -->
+        <script type="application/javascript" src="./js/login.js"></script>
 
     </body>
 

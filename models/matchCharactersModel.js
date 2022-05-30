@@ -192,3 +192,65 @@ module.exports.guardMatchCharacter = async function(id) {
     }
 
 }
+
+module.exports.newMatchCharacter = async function(x, y, baseID, playerID) {
+
+    try {
+
+        let query = `INSERT INTO matchcharacter (mch_positionx, mch_positiony, mch_ap, mch_hp, mch_hasegg, mch_hasboon, mch_chr_id, mch_isrecovering, mch_ply_id, mch_isguarding)
+                     SELECT $1 AS mch_positionx,
+                            $2 AS mch_positiony,
+                            6 AS mch_ap,
+                            chr_basehp AS mch_hp,
+                            false AS mch_asegg,
+                            false AS mch_hasboon,
+                            $3 AS mch_chr_id,
+                            false AS mch_isrecovering,
+                            $4 AS mch_ply_id,
+                            false AS mch_isguarding
+                     FROM character WHERE chr_id = $3
+                     RETURNING mch_id`;
+                     
+        let result = await pool.query(query, [x, y, baseID, playerID]);
+
+        query = `INSERT INTO matchcharacterskill (mcs_mch_id, mcs_skl_id, mcs_canuse)
+                 SELECT $1 AS mcs_mch_id,
+                        cs.cs_skl_id AS mcs_skl_id,
+                        true AS mcs_canuse
+                 FROM character c INNER JOIN characterskill cs ON c.chr_id = cs.cs_chr_id
+                 WHERE c.chr_id = $2`
+
+        await pool.query(query, [result.rows[0].mch_id, baseID]);
+
+        return { status: 200, result: { msg: 'Created new match character!' } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.deletePlayerMatchCharacters = async function(playerID) {
+
+    try {
+
+        let query = `DELETE FROM matchcharacterskill
+                     WHERE mcs_mch_id IN (SELECT mch_id FROM matchcharacter WHERE mch_ply_id = $1)`;
+        await pool.query(query, [playerID]);
+
+        query = `DELETE FROM matchcharacter WHERE mch_ply_id = $1`;
+        await pool.query(query, [playerID]);
+
+        return { status: 200, result: { msg: 'Removed match characters!' } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}

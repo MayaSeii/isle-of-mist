@@ -167,8 +167,20 @@ class GameManager {
         await GameManager.reloadPlayerCharacters(GameManager.match.m_playeroneid);
         await GameManager.reloadPlayerCharacters(GameManager.match.m_playertwoid);
 
-        if (GameManager.checkLoss()) alert('You lose!');
-        if (GameManager.checkWin()) alert('You win!');
+        if (GameManager.checkLoss()) {
+            
+            alert('You lose!');
+            window.location.href = "/dashboard";
+
+        }
+
+        if (GameManager.checkWin()) {
+
+            deleteMatch(GameManager.match);
+            alert('You win!');
+            window.location.href = "/dashboard";
+
+        }
 
         const activePlayer = await getMatchActivePlayer(GameManager.match.m_id);
         GameManager.match.m_activeplayer = activePlayer.m_activeplayer;

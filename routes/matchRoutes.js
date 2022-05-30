@@ -9,6 +9,69 @@ router.get('/', async function(req, res, next) {
     
 });
 
+router.post('/newMatch', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let matchName = req.body.matchName;
+        let matchPass = req.body.matchPass;
+        let playerID = req.signedCookies.playerID;
+    
+        let result = await mModel.newMatch(matchName, matchPass, playerID);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
+router.get('/isInMatch', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let playerID = req.signedCookies.playerID;
+    
+        let result = await mModel.playerIsInMatch(playerID);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
+router.post('/joinMatch', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let matchName = req.body.matchName;
+        let matchPass = req.body.matchPass;
+        let playerID = req.signedCookies.playerID;
+    
+        let result = await mModel.joinMatch(matchName, matchPass, playerID);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
+router.get('/count/:name', async function(req, res, next) {
+
+    let name = req.params.name;
+    let result = await mModel.matchCountByName(name);
+    res.status(result.status).send(result.result.toString());
+    
+});
+
 router.get('/:id', async function(req, res, next) {
 
     let id = req.params.id;
@@ -41,77 +104,36 @@ router.get('/:id/guardian', async function(req, res, next) {
     
 });
 
-router.get('/characters/:id', async function(req, res, next) {
-
-    let id = req.params.id;
-    let result = await mModel.getMatchCharacterById(id);
-    res.status(result.status).send(result.result);
-
-});
-
-router.post('/characters/:id', async function(req, res, next) {
-
-    let id = req.params.id;
-    let character = req.body.character;
-    let result = await mModel.updateMatchCharacter(id, character);
-    res.status(result.status).send(result.result);
-
-});
-
-router.post('/characters/:id/resetAP/:player', async function(req, res, next) {
-
-    let id = req.params.id;
-    let player = req.params.player;
-
-    let result = await mModel.resetMatchCharacterAP(id, player);
-    res.status(result.status).send(result.result);
-
-});
-
-router.post('/characters/:id/hurt/:skill/:dmg', async function(req, res, next) {
-
-    let id = req.params.id;
-    let skill = req.params.skill;
-    let dmg = req.params.dmg;
-
-    let result = await mModel.hurtMatchCharacter(id, skill, dmg);
-    res.status(result.status).send(result.result);
-
-});
-
-router.post('/characters/:id/move/', async function(req, res, next) {
-
-    let id = req.params.id;
-    let posX = req.body.posX;
-    let posY = req.body.posY;
-
-    let result = await mModel.moveMatchCharacter(id, posX, posY);
-    res.status(result.status).send(result.result);
-
-});
-
-router.get('/characters/:id/skills', async function(req, res, next) {
-
-    let id = req.params.id;
-    let result = await mModel.getMatchCharacterSkillsById(id);
-    res.status(result.status).send(result.result);
-
-});
-
-router.get('/characters/:id/guard', async function(req, res, next) {
-
-    let id = req.params.id;
-    let result = await mModel.guardMatchCharacter(id);
-    res.status(result.status).send(result.result);
-
-});
-
 router.post('/:id/newTurn', async function(req, res, next) {
 
-    let id = req.params.id;
-    let result = await mModel.newTurn(id);
-    res.status(result.status).send(result.result);
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let result = await mModel.newTurn(id);
+        res.status(result.status).send(result.result);
+
+    }
 
 });
+
+router.delete('/delete', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let match = req.body.match;
+        let result = await mModel.deleteMatch(match);
+        res.status(result.status).send(result.result);
+
+    }
+
+})
             
 module.exports = router;

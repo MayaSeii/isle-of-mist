@@ -1,3 +1,15 @@
+
+// ===============================================
+// !! IMPORTANT !!
+// The code here WON'T BE USED IN THE FINAL VERSION.
+// It's here so that the test page (used in early prototypes) works!
+// In the report, this is part of the incomplete features.
+
+// THE SERVER CALLS IMPLEMENTED HERE HAVE ALL BEEN IMPLEMENTED
+// USING PROPER MODEL-ROUTE-REQUEST STRUCTURING FOR THE LATEST PAGES.
+// ===============================================
+
+
 async function getCharacters() {
 
     try {

@@ -8,15 +8,6 @@ var app = require('../app');
 var debug = require('debug')('isle-of-mist:server');
 var http = require('http');
 
-/*app.use((req, res, next) => {
-
-  if (req.session.auth || req.path === '/') next();
-  else res.redirect('/');
-
-});*/
-
-require('../routes/oldRoutes')(app);
-
 /**
  * Get port from environment and store in Express.
  */

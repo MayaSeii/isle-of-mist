@@ -9,10 +9,11 @@ function preload() {
 
 async function setup() {
 
-    let TEST_DELETE_LATER = sessionStorage.getItem('playerId') || 23;
+    const playerID = await getCurrentPlayerID();
+    const match = await getPlayerMatch(playerID);
 
     // Sets up the game and UI managers.
-    await GameManager.setup(25, TEST_DELETE_LATER);
+    await GameManager.setup(match.m_id, playerID);
 
     // Creates the canvas.
     canvas = createCanvas(window.innerWidth, window.innerHeight);
@@ -24,7 +25,7 @@ async function setup() {
     
     UIManager.setup();
 
-    setInterval(GameManager.refresh, 500)
+    setInterval(GameManager.refresh, 1000)
 
 }
 

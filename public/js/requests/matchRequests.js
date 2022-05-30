@@ -15,6 +15,67 @@ async function getMatch(id) {
 
 }
 
+async function getMatchCountByName(name) {
+
+    try {
+
+        const response = await fetch(`/api/matches/count/${name}`);
+
+        if (response.status == 200) {
+
+            var result = await response.json();
+            return result;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function newMatch(matchName, matchPass) {
+
+    try {
+
+        const response = await fetch(`/api/matches/newMatch`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ matchName: matchName, matchPass: matchPass })
+
+        });
+
+        var result = await response.json();
+        return result;
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function joinMatch(matchName, matchPass) {
+
+    try {
+
+        const response = await fetch(`/api/matches/joinMatch`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ matchName: matchName, matchPass: matchPass })
+
+        });
+
+        var result = await response.json();
+        return result;
+
+    } catch (err) { console.log(err); }
+
+}
+
 async function getMatchActivePlayer(id) {
 
     try {
@@ -42,6 +103,25 @@ async function getMatchArena(id) {
 
             var arena = await response.json();
             return arena.arn_rawcode;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function playerIsInMatch() {
+
+    try {
+
+        const response = await fetch(`/api/matches/isInMatch`, {
+            credentials: 'include'
+        });
+
+        if (response.status == 200) {
+
+            var result = await response.json();
+            return result;
 
         } else { console.log(response); }
 
@@ -80,6 +160,32 @@ async function newTurn(id) {
 
             var match = await response.json();
             return match;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function deleteMatch(match) {
+
+    try {
+
+        const response = await fetch(`/api/matches/delete`, {
+
+            method: 'delete',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ match: match })
+
+        });
+
+        if (response.status == 200) {
+
+            var res = await response.json();
+            return res;
 
         } else { console.log(response); }
 

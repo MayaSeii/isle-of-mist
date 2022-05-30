@@ -87,13 +87,14 @@ async function hurtMatchCharacter(id, skill, dmg) {
 
     try {
 
-        const response = await fetch(`/api/matchcharacters/${id}/hurt/${skill}/${dmg}`, {
+        const response = await fetch(`/api/matchcharacters/${id}/hurt`, {
 
             method: 'post',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ skill: skill, dmg: dmg })
 
         });
 

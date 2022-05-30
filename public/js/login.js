@@ -1,3 +1,7 @@
+/**
+ * Shows the registering fields.
+ * @param {number} delay - The sliding animation timing.
+ */
 function showRegister(delay = 200) {
 
     $('#group-register').show();
@@ -9,6 +13,10 @@ function showRegister(delay = 200) {
 
 }
 
+/**
+ * Shows only the login fields.
+ * @param {number} delay - The sliding animation timing.
+ */
 function showLogin(delay = 200) {
 
     $('#group-register').hide();
@@ -21,12 +29,24 @@ function showLogin(delay = 200) {
 
 $(document).ready(() => {
 
+    /**
+     * Shows a verification error message.
+     * @param {string} msg - The message to show.
+     */
+    function verificationError(msg) {
+
+        $('#verification').html(msg);
+        return $('#verification').slideDown(200);
+
+    }
+
+    // Hides the verification error text when typing.
     $('#input-username').keydown(() => { $('#verification').slideUp(200) });
     $('#input-password').keydown(() => { $('#verification').slideUp(200) });
     $('#input-confirm') .keydown(() => { $('#verification').slideUp(200) });
 
-    // User login.
-    $('#btn-login').click((e) => {
+    /** User login function. */
+    $('#btn-login').click(async (e) => {
 
         e.preventDefault();
 
@@ -38,46 +58,25 @@ $(document).ready(() => {
         if (!u.trim() || u.length === 0 || !p.trim() || p.length === 0)
             return verificationError('Username and password must not be empty.');
 
-        // Creates a login object.
-        let login = {
+        let loginResponse = await login(u, p);
 
-            username: u,
-            password: p
+        // Logs the user in only if a player object is received (meaning the password was valid).
+        if (loginResponse.ply_id != undefined) {
 
-        };
+            sessionStorage.setItem('currentAccount', loginResponse.ply_id);
+            document.location.href = '/dashboard';
 
-        $.ajax({
+        } else {
 
-            url: '/api/login',
-            type: 'POST',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(login),
+            $('#verification').html(loginResponse.msg);
+            return $('#verification').slideDown(200);
 
-            success: function(response) {
-
-                // Checks if the user exists on the database.
-                if (response.rowCount <= 0) {
-
-                    $('#input-username').val('');
-                    $('#input-password').val('');
-
-                    $('#verification').html('Invalid username or password! Please try again.')
-                    return $('#verification').slideDown(200);
-
-                }
-                
-                sessionStorage.setItem('currentAccount', response.rows[0].name);
-                document.location.href = '/dashboard';
-
-            }
-    
-        });
+        }
 
     });
 
-    // User registration.
-    $('#btn-register').click((e) => {
+    /** User registration function. */
+    $('#btn-register').click(async (e) => {
 
         e.preventDefault();
 
@@ -106,68 +105,32 @@ $(document).ready(() => {
         if (c !== p)
             return verificationError('Password and confirmation must be the same.');
 
-        // Creates a login object.
-        let login = {
+        // Checks if the username is already taken.
+        let checkIfExists = await getPlayerByName(u);
+        if (checkIfExists) return verificationError('Username is taken!');
 
-            username: u,
-            password: p
+        // Registers the user.
+        let registerResponse = await register(u, p);
+        
+        $('#input-username').val('');
+        $('#input-password').val('');
+        $('#input-confirm').val('');
 
-        };
+        showLogin(0);
 
-        $.ajax({
+        // Shows a success notification with the registration message.
+        toastr.success(registerResponse.msg, {
 
-            url: `/api/players/${u}`,
-            type: 'GET',
+            tapToDismiss: false,
+            toastClass: 'toast-success',
 
-            success: function(response) {
+            showDuration: 300,
+            hideDuration: 100,
 
-                // Checks if the user exists on the database.
-                if (response.rowCount > 0)
-                    return verificationError('Username is taken!');
-                
-                $.ajax({
+            iconClass: ''
 
-                    url: '/api/register',
-                    type: 'POST',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify(login),
-        
-                    success: function() {
-        
-                        $('#input-username').val('');
-                        $('#input-password').val('');
-                        $('#input-confirm').val('');
-        
-                        showLogin(0);
-        
-                        toastr.success(`Account <span style='font-weight: bold'>${login.username}</span> registered successfully.`, {
-        
-                            tapToDismiss: false,
-                            toastClass: 'toast-success',
-        
-                            showDuration: 300,
-                            hideDuration: 100,
-        
-                            iconClass: ''
-        
-                        });
-        
-                    }
-            
-                });
-
-            }
-    
         });
 
     });
 
 });
-
-function verificationError(msg) {
-
-    $('#verification').html(msg);
-    return $('#verification').slideDown(200);
-
-}

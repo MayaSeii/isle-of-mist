@@ -17,22 +17,22 @@ router.get('/:id', async function(req, res, next) {
     
 });
 
-router.post('/match/:id/:charId', async function(req, res, next) {
+router.post('/used', async function(req, res, next) {
 
-    let id = req.params.id;
-    let charId = req.params.charId;
+    let id = req.body.id;
+    let charID = req.body.charID;
 
-    let result = await sModel.markSkillAsUsed(charId, id);
+    let result = await sModel.markSkillAsUsed(charID, id);
     res.status(result.status).send(result.result);
 
 });
 
-router.post('/match/unused/:id/:charId', async function(req, res, next) {
+router.post('/unused', async function(req, res, next) {
 
-    let id = req.params.id;
-    let charId = req.params.charId;
+    let id = req.body.id;
+    let charID = req.body.charID;
 
-    let result = await sModel.markSkillAsUnused(charId, id);
+    let result = await sModel.markSkillAsUnused(charID, id);
     res.status(result.status).send(result.result);
 
 });

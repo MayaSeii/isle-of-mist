@@ -7,11 +7,14 @@
         <title>Isle of Mist - Dashboard</title>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="./css/lib/toastr.min.css" />
+        <!-- Page Icon -->
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="./css/lib/toastr.min.css" />
         <link rel="stylesheet" href="./css/dashboard.css" />
 
+        <!-- Icon Set -->
         <link rel="stylesheet" type="text/css" href="./css/lib/all.css">
 
     </head>
@@ -40,9 +43,9 @@
             
                         <div class="row">
                             
-                            <button id="btn-settings">Account Settings</button>
+                            <button id="btn-settings" disabled>Account Settings</button>
             
-                            <button id="btn-howto" title="How to Play"><i class="fas fa-question"></i></button>
+                            <button id="btn-howto" title="How to Play" disabled><i class="fas fa-question"></i></button>
                             <button id="btn-signout" title="Sign Out"><i class="fas fa-sign-out"></i></button>
             
                         </div>
@@ -81,10 +84,24 @@
                 <div id="dashboard-room">
 
                     <h2>Current Room</h2>
-                    <h4 style="margin-top: 2.6rem; text-align: center">
-                        Whoops! No room available.<br>
-                        <strong>Host</strong> or <strong>join</strong> a room.
-                    </h4>
+
+                    <div id="no-room">
+
+                        <h4 style="margin-top: 2.6rem; text-align: center">
+                            Whoops! No room available.<br>
+                            <strong>Host</strong> or <strong>join</strong> a room.
+                        </h4>
+
+                    </div>
+
+                    <div id="has-room">
+
+                        <h4 style="margin-top: 2.6rem; text-align: center">
+                            Playing against <strong><span id='opponent'>(PENDING)</span></strong>.
+                            <button id="btn-start-match" disabled>Open Match</button>
+                        </h4>
+                        
+                    </div>
 
                 </div>
 
@@ -92,10 +109,16 @@
 
         </div>
 
-        <script type="text/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
-        <script type="text/javascript" src="./js/lib/toastr.min.js"></script>
-        <script type="text/javascript" src="./js/manager.js"></script>
-        <script type="text/javascript" src="./js/dashboard.js"></script>
+        <!-- Libraries -->
+        <script type="application/javascript" src="./js/lib/jquery-3.6.0.min.js"></script>
+        <script type="application/javascript" src="./js/lib/toastr.min.js"></script>
+
+        <!-- Request Scripts -->
+        <script type="application/javascript" src="./js/requests/playerRequests.js"></script>
+        <script type="application/javascript" src="./js/requests/matchRequests.js"></script>
+
+        <!-- Page Script -->
+        <script type="application/javascript" src="./js/dashboard.js"></script>
 
     </body>
 

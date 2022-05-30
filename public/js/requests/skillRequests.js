@@ -15,17 +15,18 @@ async function getSkill(id) {
 
 }
 
-async function markSkillAsUsed(charId, id) {
+async function markSkillAsUsed(charID, id) {
 
     try {
 
-        const response = await fetch(`/api/skills/match/${id}/${charId}`, {
+        const response = await fetch(`/api/used`, {
 
             method: 'post',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ id: id, charID: charID })
 
         });
 
@@ -40,17 +41,18 @@ async function markSkillAsUsed(charId, id) {
 
 }
 
-async function markSkillAsUnused(charId, id) {
+async function markSkillAsUnused(charID, id) {
 
     try {
 
-        const response = await fetch(`/api/skills/match/unused/${id}/${charId}`, {
+        const response = await fetch(`/api/unused`, {
 
             method: 'post',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ id: id, charID: charID })
 
         });
 

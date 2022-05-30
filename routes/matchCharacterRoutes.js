@@ -19,33 +19,57 @@ router.get('/:id', async function(req, res, next) {
 
 router.post('/:id/resetAP/:player', async function(req, res, next) {
 
-    let id = req.params.id;
-    let player = req.params.player;
+    if (!req.signedCookies.playerID) {
 
-    let result = await cModel.resetMatchCharacterAP(id, player);
-    res.status(result.status).send(result.result);
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let player = req.params.player;
+
+        let result = await cModel.resetMatchCharacterAP(id, player);
+        res.status(result.status).send(result.result);
+
+    }
 
 });
 
-router.post('/:id/hurt/:skill/:dmg', async function(req, res, next) {
+router.post('/:id/hurt', async function(req, res, next) {
 
-    let id = req.params.id;
-    let skill = req.params.skill;
-    let dmg = req.params.dmg;
+    if (!req.signedCookies.playerID) {
 
-    let result = await cModel.hurtMatchCharacter(id, skill, dmg);
-    res.status(result.status).send(result.result);
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let skill = req.body.skill;
+        let dmg = req.body.dmg;
+
+        let result = await cModel.hurtMatchCharacter(id, skill, dmg);
+        res.status(result.status).send(result.result);
+
+    }
 
 });
 
 router.post('/:id/move', async function(req, res, next) {
 
-    let id = req.params.id;
-    let posX = req.body.posX;
-    let posY = req.body.posY;
+    if (!req.signedCookies.playerID) {
 
-    let result = await cModel.moveMatchCharacter(id, posX, posY);
-    res.status(result.status).send(result.result);
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let posX = req.body.posX;
+        let posY = req.body.posY;
+
+        let result = await cModel.moveMatchCharacter(id, posX, posY);
+        res.status(result.status).send(result.result);
+
+    }
 
 });
 
@@ -59,9 +83,17 @@ router.get('/:id/skills', async function(req, res, next) {
 
 router.get('/:id/guard', async function(req, res, next) {
 
-    let id = req.params.id;
-    let result = await cModel.guardMatchCharacter(id);
-    res.status(result.status).send(result.result);
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let result = await cModel.guardMatchCharacter(id);
+        res.status(result.status).send(result.result);
+
+    }
 
 });
             
