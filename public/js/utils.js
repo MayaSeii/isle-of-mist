@@ -7,7 +7,20 @@ function getRandomFloat(min, max, decimals) {
 
 function getRandomInt(min, max) {
 
-    return Math.random() * (max - min) + min;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+
+}
+
+function getDistance(x1, x2, y1, y2) {
+
+    var a = x1 - x2;
+    var b = y1 - y2;
+
+    console.log(Math.sqrt(a * a + b * b))
+    return Math.sqrt(a * a + b * b);
 
 }
 

@@ -163,6 +163,38 @@ module.exports.hurtMatchCharacter = async function(id, skillId, dmg) {
 
 }
 
+module.exports.hurtMatchCharacterByGuardian = async function(id, closeRange) {
+
+    try {
+
+        let damage = closeRange ? 7 : 3;
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_hp = GREATEST(0, mch_hp - ((FLOOR(RANDOM() * ($2)) + 1)))
+                     FROM character c
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id, damage]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
 module.exports.guardMatchCharacter = async function(id) {
 
     try {

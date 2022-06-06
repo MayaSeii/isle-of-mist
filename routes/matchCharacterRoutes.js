@@ -54,6 +54,24 @@ router.post('/:id/hurt', async function(req, res, next) {
 
 });
 
+router.post('/:id/hurtByGuardian', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let closeRange = req.body.closeRange;
+
+        let result = await cModel.hurtMatchCharacterByGuardian(id, closeRange);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
 router.post('/:id/move', async function(req, res, next) {
 
     if (!req.signedCookies.playerID) {

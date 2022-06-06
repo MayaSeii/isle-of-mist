@@ -109,6 +109,32 @@ async function hurtMatchCharacter(id, skill, dmg) {
 
 }
 
+async function hurtMatchCharacterByGuardian(id, closeRange) {
+
+    try {
+
+        const response = await fetch(`/api/matchcharacters/${id}/hurtByGuardian`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ closeRange: closeRange })
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
 async function guardMatchCharacters(id) {
 
     try {

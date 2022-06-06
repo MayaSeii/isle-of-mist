@@ -188,7 +188,7 @@ class Character {
 
     }
 
-    /** Avoids lerping the when loading the page. */
+    /** Avoids lerping when loading the page. */
     getFirstPosition() {
 
         if (this.isDead()) return;
@@ -309,6 +309,17 @@ class Character {
 
         skill.markAsUsed();
         Character.attacking.cancelAttack();
+
+        if (this.isDead()) this.div.remove();
+
+    }
+
+    async getAttackedByGuardian(closeRange) {
+
+        if (this.isDead()) return;
+
+        this.hurt();
+        this.data = await hurtMatchCharacterByGuardian(this.data.mch_id, closeRange);
 
         if (this.isDead()) this.div.remove();
 
