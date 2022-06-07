@@ -91,6 +91,77 @@ router.post('/:id/move', async function(req, res, next) {
 
 });
 
+router.post('/:id/grabEgg', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+
+        let result = await cModel.markAsEggHolder(id);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
+router.post('/:id/releaseEgg', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+
+        let result = await cModel.removeEggHolder(id);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
+router.post('/:id/resetOnDeath', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let posX = req.body.posX;
+        let posY = req.body.posY;
+
+        let result = await cModel.resetPosition(id, posX, posY);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
+router.post('/:id/reduceAP', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let amount = req.body.amount;
+
+        let result = await cModel.reduceMatchCharacterAP(id, amount);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
 router.get('/:id/skills', async function(req, res, next) {
 
     let id = req.params.id;

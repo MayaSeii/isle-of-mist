@@ -10,4 +10,6 @@ class Colours {
     static apBar = '#3d6dcc';
     static apBarEmpty = 'rgba(0, 0, 255, 0.15)';
 
+    static stroke = '#000000aa';
+
 }

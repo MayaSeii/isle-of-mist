@@ -127,6 +127,8 @@ class Tile {
      */
     isOccupiedByGuardian() {
 
+        if (GameManager.guardian.isEgg()) return false;
+
         const gx = GameManager.guardian.data.grd_positionx - 1;
         const gy = 18 - GameManager.guardian.data.grd_positiony;
 
@@ -139,6 +141,38 @@ class Tile {
                (gx == this.absolutePos.x) && (gy == this.absolutePos.y - 1) ||
                (gx == this.absolutePos.x + 1) && (gy == this.absolutePos.y - 1) ||
                (gx == this.absolutePos.x - 1) && (gy == this.absolutePos.y - 1);
+
+    }
+
+    hasEgg() {
+
+        const gx = GameManager.guardian.data.grd_positionx - 1;
+        const gy = 18 - GameManager.guardian.data.grd_positiony;
+
+        if (GameManager.guardian.isEgg()) return (gx == this.absolutePos.x) && (gy == this.absolutePos.y);
+        else return false;
+
+    }
+
+    /**
+     * Checks whether any character occupies a potential tile for the Guardian.
+     * @returns {boolean} - True if any character occupies a potential Guardian character, false otherwise.
+     */
+    isOccupiedFromGuardian() {
+
+        let occupied = false;
+
+        GameManager.characters.forEach(c => {
+
+            const gx = GameManager.guardian.data.grd_positionx - 1;
+            const gy = 18 - GameManager.guardian.data.grd_positiony;
+
+            if (getDistance(c.data.mch_positionx, gx, c.data.mch_positiony, gy) <= 1.25)
+                occupied = true;
+
+        })
+
+        return occupied;
 
     }
 

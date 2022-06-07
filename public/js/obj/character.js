@@ -2,7 +2,7 @@ class Character {
 
     static selected;
     static attacking;
-    static haveAttacked = [];
+    static isSkill;
 
     /**
      * Creates a new character.
@@ -12,10 +12,8 @@ class Character {
 
         this.data = data;
 
-        // Loads the character's full art and portrait based on their first name.
-        //this.art = loadImage(`../img/art/${this.data.chr_firstname}.png`);
-        //this.portrait = loadImage(`../img/portraits/${this.data.chr_firstname}.png`);
         this.sprite = loadImage(`../img/sprites/${this.data.chr_firstname.toLowerCase()}.png`);
+        this.inactiveSprite = loadImage(`../img/sprites/${this.data.chr_firstname.toLowerCase()}_inactive.png`);
 
         // Creates a div for HTML-related styling.
         this.div = createDiv();
@@ -34,14 +32,14 @@ class Character {
     async loadSkills() {
         
         let skills = await getMatchCharacterSkills(this.data.mch_id);
-        skills.forEach(skill => this.skills.push(new Skill(skill)));
+
+        if (this.skills.length < 4) skills.forEach(skill => this.skills.push(new Skill(skill)));
+        else skills.forEach(skill => this.skills.find(s => s.data.skl_id == skill.skl_id).data = skill);
 
     }
 
     /** Draws the character on the board. */
     draw() {
-
-        if (this.isDead()) return;
 
         // Tile positions start at 0, meaning subtracting 1 is necessary.
         const px = this.data.mch_positionx - 1;
@@ -58,7 +56,7 @@ class Character {
 
         this.updateHurtTint();
 
-        image(this.sprite, x, y, Tile.size, Tile.size);
+        image(this.data.mch_ap <= 0 ? this.inactiveSprite : this.sprite, x, y, Tile.size, Tile.size);
         this.div.position(x, y);
 
         noTint();
@@ -71,7 +69,18 @@ class Character {
 
         if (Character.attacking != undefined) {
 
-            if (this.isAdjacent(Character.attacking) && Character.attacking != this) this.getAttacked();
+            if (!Character.isSkill && this.isAdjacent(Character.attacking) && Character.attacking != this) this.getAttacked();
+
+            if (Character.isSkill) {
+
+                let c = Character.attacking;
+                let s = c.skills.find(sk => sk.data.skl_name == `${c.data.chr_firstname} Skill`);
+
+                let valid = getDistance(this.data.mch_positionx, c.data.mch_positionx, this.data.mch_positiony, c.data.mch_positiony) <= s.data.skl_range;
+                if (valid) this.getAttacked();
+
+            } 
+
             else AudioManager.playRandom(AudioManager.notAllowed);
             return;
 
@@ -110,32 +119,52 @@ class Character {
         const px = this.data.mch_positionx - 1;
         const py = 18 - this.data.mch_positiony;
         
-        this.reduceAP(Math.abs(px - tile.absolutePos.x) + Math.abs(py - tile.absolutePos.y));
+        await this.reduceAP(Math.abs(px - tile.absolutePos.x) + Math.abs(py - tile.absolutePos.y));
 
         this.data.mch_positionx = tile.absolutePos.x + 1;
         this.data.mch_positiony = 18 - tile.absolutePos.y;
         this.data = await moveMatchCharacter(this.data.mch_id, tile.absolutePos.x + 1, 18 - tile.absolutePos.y);
 
+        if (this.hasEgg()) GameManager.guardian.moveEgg(this.data.mch_positionx, this.data.mch_positiony);
+
         if (tile.type == "L" && this.data.chr_tile != "L") setTimeout(() => { this.hurt(); }, 180);
+        if (!this.hasEgg() && tile.hasEgg()) await this.collectEgg();
+
+        if (this.hasEgg() && tile.type == 'E')
+            GameManager.match = await setWinner(GameManager.match.m_id, this.data.mch_ply_id);
 
         Character.selected = undefined;
 
     }
 
-    reduceAP(value) {
+    hasEgg() {
+
+        return this.data.mch_hasegg;
+
+    }
+
+    async collectEgg() {
+
+        await this.reduceAP(6);
+        this.data = await grabEgg(this.data.mch_id);
+
+    }
+
+    async dropEgg() {
+
+        this.data = await releaseEgg(this.data.mch_id);
+
+    }
+
+    async reduceAP(value) {
 
         if (this.isDead()) return;
-
         if (this.data.mch_ap <= 0) return;
 
         this.data.mch_ap = Math.max(0, this.data.mch_ap - value);
+        if (this.data.mch_ap <= 0) this.div.addClass('not-allowed');
 
-        if (this.data.mch_ap <= 0) {
-            
-            this.sprite = loadImage(`../img/sprites/${this.data.chr_firstname.toLowerCase()}_inactive.png`);
-            this.div.addClass('not-allowed');
-
-        }
+        this.data = await reduceMatchCharacterAP(this.data.mch_id, value);
 
     }
 
@@ -156,9 +185,7 @@ class Character {
 
     }
 
-    /**
-     * Shows the character being hurt; this DOES NOT affect the database (actual HP).
-     */
+    /** Shows the character being hurt; this DOES NOT affect the database (actual HP). */
     hurt() {
 
         if (this.isDead()) return;
@@ -206,22 +233,22 @@ class Character {
     }
 
     /** Validates the attack before attacking. */
-    attack() {
+    attack(isSkill = false) {
 
         if (this.isDead()) return;
 
-        let skill = this.skills.find(s => s.data.skl_name == 'Attack');
+        let skill = isSkill ? this.skills[1] : this.skills.find(s => s.data.skl_name == 'Attack');
 
         // Checks if the attack can be used.
         if (skill.hasBeenUsed() || this.data.mch_ap < skill.data.skl_cost)
             return AudioManager.playRandom(AudioManager.notAllowed);
 
-        if (Character.attacking != this) this.initiateAttack();
+        if (Character.attacking != this) this.initiateAttack(isSkill);
         else this.cancelAttack();
 
     }
 
-    guard() {
+    async guard() {
 
         if (this.isDead()) return;
 
@@ -233,33 +260,59 @@ class Character {
         skill.markAsUsed();
 
         guardMatchCharacters(this.data.mch_id);
-        this.reduceAP(skill.data.skl_cost);
+        await this.reduceAP(skill.data.skl_cost);
 
         AudioManager.playRandom(AudioManager.characterClick);
         AudioManager.playRandom(AudioManager.skill['guard']);
 
     }
 
-    initiateAttack() {
+    initiateAttack(isSkill = false) {
 
         if (this.isDead()) return;
 
         Character.attacking = this;
-        AudioManager.playRandom(AudioManager.skill['attack']);
+
+        if (!isSkill) AudioManager.playRandom(AudioManager.skill['attack']);
+        else AudioManager.playRandom(AudioManager.skill['unique']);
+
         AudioManager.playRandom(AudioManager.characterClick);
 
         $('body > *').addClass('aim');
 
-        GameManager.characters.forEach(char => {
+        if (isSkill) {
 
-            if (this.isAdjacent(char)) {
+            let skill = this.skills.find(s => s.data.skl_name == `${this.data.chr_firstname} Skill`);
+            Character.isSkill = true;
 
-                if (char.data.mch_ply_id == this.data.mch_ply_id) char.div.addClass('aim-ally');
-                else char.div.addClass('aim-enemy');
+            GameManager.characters.filter(c => c.data.mch_id != this.data.mch_id).forEach(char => {
+    
+                if (getDistance(this.data.mch_positionx, char.data.mch_positionx, this.data.mch_positiony, char.data.mch_positiony) <= skill.data.skl_range) {
+    
+                    if (char.data.mch_ply_id == this.data.mch_ply_id) char.div.addClass('aim-ally');
+                    else char.div.addClass('aim-enemy');
+    
+                }
+    
+            });
 
-            }
+        } else {
 
-        });
+            if (GameManager.guardian.isAdjacent(this) && !GameManager.guardian.isEgg())
+                GameManager.guardian.div.addClass('aim-enemy');
+    
+            GameManager.characters.filter(c => c.data.mch_id != this.data.mch_id).forEach(char => {
+    
+                if (this.isAdjacent(char)) {
+    
+                    if (char.data.mch_ply_id == this.data.mch_ply_id) char.div.addClass('aim-ally');
+                    else char.div.addClass('aim-enemy');
+    
+                }
+    
+            });
+
+        }
 
     }
 
@@ -289,6 +342,7 @@ class Character {
         if (this.isDead()) return;
 
         Character.attacking = undefined;
+        Character.isSkill = false;
         AudioManager.playRandom(AudioManager.cancel);
 
         // Clears all aiming cursors.
@@ -304,13 +358,14 @@ class Character {
 
         this.hurt();
 
-        let skill = Character.attacking.skills.find(s => s.data.skl_name == 'Attack');
+        let skill = Character.isSkill ? Character.attacking.skills.find(s => s.data.skl_name == `${Character.attacking.data.chr_firstname} Skill`) : Character.attacking.skills.find(s => s.data.skl_name == 'Attack');
         this.data = await hurtMatchCharacter(this.data.mch_id, skill.data.skl_id, Character.attacking.data.chr_baseatk - (this.data.mch_isguarding ? 3 : 0));
 
         skill.markAsUsed();
+        await Character.attacking.reduceAP(skill.data.skl_cost);
         Character.attacking.cancelAttack();
 
-        if (this.isDead()) this.div.remove();
+        if (this.isDead()) await this.kill();
 
     }
 
@@ -321,7 +376,7 @@ class Character {
         this.hurt();
         this.data = await hurtMatchCharacterByGuardian(this.data.mch_id, closeRange);
 
-        if (this.isDead()) this.div.remove();
+        if (this.isDead()) await this.kill();
 
     }
 
@@ -330,6 +385,33 @@ class Character {
 
         if (this.isDead()) return;
         this.data = await resetMatchCharacterAP(this.data.mch_id, activePlayer);
+
+    }
+
+    async kill() {
+
+        let tile;
+
+        if (GameManager.match.m_playeroneid == this.data.mch_ply_id) {
+
+            tile = GameManager.board.tileArray.find(t => t.absolutePos.x == 17 && t.absolutePos.y == 17);
+            if (tile.isOccupied()) tile = GameManager.board.tileArray.find(t => t.absolutePos.x == 16 && t.absolutePos.y == 17);
+            if (tile.isOccupied()) tile = GameManager.board.tileArray.find(t => t.absolutePos.x == 15 && t.absolutePos.y == 17);
+
+        } else {
+
+            tile = GameManager.board.tileArray.find(t => t.absolutePos.x == 0 && t.absolutePos.y == 0);
+            if (tile.isOccupied()) tile = GameManager.board.tileArray.find(t => t.absolutePos.x == 1 && t.absolutePos.y == 0);
+            if (tile.isOccupied()) tile = GameManager.board.tileArray.find(t => t.absolutePos.x == 2 && t.absolutePos.y == 0);
+
+        }
+
+        if (this.hasEgg()) this.data = await releaseEgg(this.data.mch_id);
+
+        this.data.mch_positionx = tile.absolutePos.x + 1;
+        this.data.mch_positiony = 18 - tile.absolutePos.y;
+
+        this.data = await resetMatchCharacterOnDeath(this.data.mch_id, this.data.mch_positionx, this.data.mch_positiony);
 
     }
 

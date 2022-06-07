@@ -64,3 +64,9 @@ function setupCanvas() {
     context.imageSmoothingEnabled = false;
 
 }
+
+function keyPressed() {
+    
+    GameManager.cheats();
+
+}

@@ -2,14 +2,14 @@ var express = require('express');
 var router = express.Router();
 var sModel = require("../models/skillsModel");
             
-router.get('/', async function(req, res, next) {
+router.get('/', async function(_req, res, _next) {
 
     let result = await sModel.getAllSkills();
     res.status(result.status).send(result.result);
     
 });
 
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', async function(req, res, _next) {
 
     let id = req.params.id;
     let result = await sModel.getSkillById(id);
@@ -17,7 +17,7 @@ router.get('/:id', async function(req, res, next) {
     
 });
 
-router.post('/used', async function(req, res, next) {
+router.post('/used', async function(req, res, _next) {
 
     let id = req.body.id;
     let charID = req.body.charID;
@@ -27,7 +27,7 @@ router.post('/used', async function(req, res, next) {
 
 });
 
-router.post('/unused', async function(req, res, next) {
+router.post('/unused', async function(req, res, _next) {
 
     let id = req.body.id;
     let charID = req.body.charID;

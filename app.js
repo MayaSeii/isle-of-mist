@@ -12,6 +12,8 @@ var matchCharactersRouter = require('./routes/matchCharacterRoutes');
 var matchesRouter = require('./routes/matchRoutes');
 var playersRouter = require('./routes/playerRoutes');
 var skillsRouter = require('./routes/skillRoutes');
+var guardiansRouter = require('./routes/guardianRoutes');
+var cheatsRouter = require('./routes/cheatRoutes');
 
 var app = express();
 
@@ -27,5 +29,7 @@ app.use('/api/matchcharacters', matchCharactersRouter);
 app.use('/api/matches', matchesRouter);
 app.use('/api/players', playersRouter);
 app.use('/api/skills', skillsRouter);
+app.use('/api/guardians', guardiansRouter);
+app.use('/api/cheats', cheatsRouter);
 
 module.exports = app;

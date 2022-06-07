@@ -19,12 +19,11 @@ function getDistance(x1, x2, y1, y2) {
     var a = x1 - x2;
     var b = y1 - y2;
 
-    console.log(Math.sqrt(a * a + b * b))
     return Math.sqrt(a * a + b * b);
 
 }
 
-function isMouseOver(x, y) {
+function isMouseOver(x, y, size = Tile.size) {
 
     let centerWidth = window.innerWidth / 2 - Tile.size * (GameManager.boardSize / 2);   
     let centerHeight = window.innerHeight / 2 - Tile.size * (GameManager.boardSize / 2);
@@ -33,8 +32,8 @@ function isMouseOver(x, y) {
     let posY = centerHeight + y;
 
     // Compensates for the centred board.
-    let xCheck = mouseX >= posX && mouseX < posX + Tile.size;
-    let yCheck = mouseY >= posY && mouseY < posY + Tile.size;
+    let xCheck = mouseX >= posX && mouseX < posX + size;
+    let yCheck = mouseY >= posY && mouseY < posY + size;
 
     return xCheck && yCheck;
 

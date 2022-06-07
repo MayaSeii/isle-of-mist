@@ -120,6 +120,24 @@ router.post('/:id/newTurn', async function(req, res, next) {
 
 });
 
+router.post('/:id/winner', async function(req, res, next) {
+
+    if (!req.signedCookies.playerID) {
+
+        res.status(401).send({ msg: 'You\'re not logged in!' });
+
+    } else {
+
+        let id = req.params.id;
+        let winnerId = req.body.winnerId;
+
+        let result = await mModel.setWinner(id, winnerId);
+        res.status(result.status).send(result.result);
+
+    }
+
+});
+
 router.delete('/delete', async function(req, res, next) {
 
     if (!req.signedCookies.playerID) {

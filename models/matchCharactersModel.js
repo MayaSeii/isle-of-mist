@@ -75,8 +75,8 @@ module.exports.resetMatchCharacterAP = async function(id, activePlayer) {
     try {
 
         let query = `UPDATE matchcharacter mc
-                     SET mch_ap = CASE WHEN mch_ply_id = $2 THEN CASE WHEN mch_hasboon = TRUE THEN 7 ELSE 6 END ELSE mch_ap END,
-                         mch_isguarding =  CASE WHEN mch_ply_id = $2 THEN FALSE ELSE mch_isguarding END
+                     SET mch_ap = CASE WHEN mch_ply_id = $2 THEN 6 ELSE mch_ap END,
+                         mch_isguarding = CASE WHEN mch_ply_id = $2 THEN FALSE ELSE mch_isguarding END
                      FROM character c
                      WHERE mc.mch_chr_id = c.chr_id
                      AND mc.mch_id = $1
@@ -137,7 +137,7 @@ module.exports.hurtMatchCharacter = async function(id, skillId, dmg) {
     try {
 
         let query = `UPDATE matchcharacter mc
-                     SET mch_hp = GREATEST(0, mch_hp - ((FLOOR(RANDOM() * (s.skl_dicetype - 1 + 1)) + 1) + $3))
+                     SET mch_hp = GREATEST(0, mch_hp - ((FLOOR(RANDOM() * (s.skl_diceamount * s.skl_dicetype - 1 + 1)) + 1) + $3))
                      FROM character c CROSS JOIN skill s
                      WHERE mc.mch_chr_id = c.chr_id
                      AND mc.mch_id = $1
@@ -170,13 +170,43 @@ module.exports.hurtMatchCharacterByGuardian = async function(id, closeRange) {
         let damage = closeRange ? 7 : 3;
 
         let query = `UPDATE matchcharacter mc
-                     SET mch_hp = GREATEST(0, mch_hp - ((FLOOR(RANDOM() * ($2)) + 1)))
+                     SET mch_hp = GREATEST(0, mch_hp - $2)
                      FROM character c
                      WHERE mc.mch_chr_id = c.chr_id
                      AND mc.mch_id = $1
                      RETURNING *`;
                      
         let result = await pool.query(query, [id, damage]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.reduceMatchCharacterAP = async function(id, amount) {
+
+    try {
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_ap = GREATEST(0, mch_ap - $2)
+                     FROM character c
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id, amount]);
 
         if (result.rows.length > 0) {
 
@@ -202,6 +232,64 @@ module.exports.guardMatchCharacter = async function(id) {
         let query = `UPDATE matchcharacter mc
                      SET mch_isguarding = CASE WHEN mch_ap < 1 THEN FALSE ELSE TRUE END,
                          mch_ap = CASE WHEN mch_ap < 1 THEN mch_ap ELSE mch_ap - 1 END
+                     FROM character c
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.markAsEggHolder = async function(id) {
+
+    try {
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_hasegg = true, mch_ap = 0
+                     FROM character c
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.removeEggHolder = async function(id) {
+
+    try {
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_hasegg = false
                      FROM character c
                      WHERE mc.mch_chr_id = c.chr_id
                      AND mc.mch_id = $1
@@ -277,6 +365,35 @@ module.exports.deletePlayerMatchCharacters = async function(playerID) {
         await pool.query(query, [playerID]);
 
         return { status: 200, result: { msg: 'Removed match characters!' } };
+
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+
+    }
+
+}
+
+module.exports.resetPosition = async function(id, posX, posY) {
+
+    try {
+
+        let query = `UPDATE matchcharacter mc
+                     SET mch_positionx = $2, mch_positiony = $3, mch_ap = 0, mch_hp = c.chr_basehp
+                     FROM character c
+                     WHERE mc.mch_chr_id = c.chr_id
+                     AND mc.mch_id = $1
+                     RETURNING *`;
+                     
+        let result = await pool.query(query, [id, posX, posY]);
+
+        if (result.rows.length > 0) {
+
+            let character = result.rows[0];
+            return { status: 200, result: character };
+
+        } else return { status: 404, result: { msg: "No match character with that ID!" } };
 
     } catch (err) {
 

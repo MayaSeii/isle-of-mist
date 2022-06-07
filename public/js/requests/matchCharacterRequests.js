@@ -159,3 +159,93 @@ async function guardMatchCharacters(id) {
     } catch (err) { console.log(err); }
 
 }
+
+async function grabEgg(id) {
+
+    try {
+
+        const response = await fetch(`/api/matchcharacters/${id}/grabEgg`, {
+            method: 'post'
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function releaseEgg(id) {
+
+    try {
+
+        const response = await fetch(`/api/matchcharacters/${id}/releaseEgg`, {
+            method: 'post'
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function resetMatchCharacterOnDeath(id, posX, posY) {
+
+    try {
+
+        const response = await fetch(`/api/matchcharacters/${id}/resetOnDeath`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ posX: posX, posY: posY })
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}
+
+async function reduceMatchCharacterAP(id, amount) {
+
+    try {
+
+        const response = await fetch(`/api/matchcharacters/${id}/reduceAP`, {
+
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount: amount })
+
+        });
+
+        if (response.status == 200) {
+
+            var character = await response.json();
+            return character;
+
+        } else { console.log(response); }
+
+    } catch (err) { console.log(err); }
+
+}

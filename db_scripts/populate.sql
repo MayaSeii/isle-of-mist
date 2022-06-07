@@ -263,7 +263,7 @@ ALTER TABLE public.skill ALTER COLUMN skl_id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 INSERT INTO public.arena OVERRIDING SYSTEM VALUE VALUES (1, 'GWGLGGGGGLGWGGWGLG
-GGGGGLGGGGLWGLLGWG
+EEEGGLGGGGLWGLLGWG
 GGFGGGGGWGGGGGGLWG
 GGGWGGWGGGWGFGGGGG
 LGGGGGLGGGGGGLGGWL
@@ -279,7 +279,7 @@ LGGGGWGGGGGGGGFGGW
 GGGGWGWLWGLGGGLGLG
 GGGGFGGGGGWGWGGGGG
 GWGGGFGGGLGGGLGGGG
-GGWGGGGGWGGGGGLWGF');
+GGWGGGGGWGGGGGLEEE');
 
 
 --
@@ -379,20 +379,20 @@ INSERT INTO public.player OVERRIDING SYSTEM VALUE VALUES (26, 'User4', '$2b$10$/
 -- Data for Name: skill; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (11, 'Protect', 'If target takes damage, unit takes damage instead.', 2, 1, 2, NULL, NULL, NULL, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (2, 'Infernal Vigour', 'If the targeted ally performs any ability with the “Strike” keyword, it may attack twice.', NULL, 1, 4, NULL, NULL, NULL, NULL);
 INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (1, 'Love and Hate', 'Grants every allied unit additional damage during their next turn.', 3, NULL, 2, NULL, 2, 4, NULL);
 INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (3, 'Rain of Arrows', 'Deal damage on all tiles chosen.', 4, 3, 3, NULL, 2, 4, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (4, 'Astral Howitzer', 'Perform a Strike.', 10, 1, 6, 4, 2, 8, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (6, 'Sword Whip', 'Pull ally toward this unit.\nPerform an Attack on enemy, then pull it toward this unit.\nIf the target is the Guardian, the unit pulls themselves toward it and deals extra damage.', 5, 1, 4, 5, 2, 8, NULL);
 INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (7, 'Swift Draw', 'Perform a Strike on any enemy that moves. Execute.', 4, NULL, 3, 4, 1, 8, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (8, 'Line Shot', 'Deal damage on all tiles chosen. Execute.', NULL, 7, 6, 4, 2, 8, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (10, 'Shield Bash', 'Perform an Attack, then push target 2 spaces. +2 Defence.', 1, 2, 2, NULL, 1, 8, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (12, 'Bold Entry', 'Move in any direction, stopping if unit collides with an enemy. ', 5, 5, 4, 4, 1, 8, NULL);
 INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (5, 'Flame Trace', 'Perform a Strike, then move 4 spaces.', 1, 5, 2, 5, 1, 8, NULL);
 INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (9, 'Flip', 'Target moves to the opposite side of unit.', 1, NULL, 0, NULL, 1, 8, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (14, 'Guard', 'Receive -3 damage during your opponent''s next turn.', NULL, NULL, 1, NULL, NULL, NULL, NULL);
-INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (13, 'Attack', 'Strike an adjacent foe.', NULL, NULL, 1, NULL, 1, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (13, 'Attack', 'Strike an adjacent foe.', 1, NULL, 1, NULL, 1, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (11, 'Protect', 'If target takes damage, unit takes damage instead.', 2, 1, 2, NULL, 1, 2, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (14, 'Guard', 'Receive -3 damage during your opponent''s next turn.', 1, NULL, 1, NULL, 1, NULL, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (4, 'Alessia Skill', 'Perform a Strike.', 4, 1, 6, 4, 2, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (6, 'Scarlet Skill', 'Pull ally toward this unit.\nPerform an Attack on enemy, then pull it toward this unit.\nIf the target is the Guardian, the unit pulls themselves toward it and deals extra damage.', 5, 1, 4, 5, 2, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (8, 'Shinsuke Skill', 'Deal damage on all tiles chosen. Execute.', 2, 7, 6, 4, 2, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (10, 'Zodan Skill', 'Perform an Attack, then push target 2 spaces. +2 Defence.', 1, 2, 2, NULL, 1, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (12, 'Gobbo Skill', 'Move in any direction, stopping if unit collides with an enemy. ', 5, 5, 4, 4, 1, 8, NULL);
+INSERT INTO public.skill OVERRIDING SYSTEM VALUE VALUES (2, 'Seii Skill', 'If the targeted ally performs any ability with the “Strike” keyword, it may attack twice.', 8, 1, 3, NULL, 1, 2, NULL);
 
 
 --

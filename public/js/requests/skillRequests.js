@@ -19,7 +19,7 @@ async function markSkillAsUsed(charID, id) {
 
     try {
 
-        const response = await fetch(`/api/used`, {
+        const response = await fetch(`/api/skills/used`, {
 
             method: 'post',
             headers: {
@@ -45,7 +45,7 @@ async function markSkillAsUnused(charID, id) {
 
     try {
 
-        const response = await fetch(`/api/unused`, {
+        const response = await fetch(`/api/skills/unused`, {
 
             method: 'post',
             headers: {
