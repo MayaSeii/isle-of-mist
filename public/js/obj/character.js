@@ -116,11 +116,6 @@ class Character {
 
         AudioManager.playRandom(AudioManager.characterMove);
 
-        const px = this.data.mch_positionx - 1;
-        const py = 18 - this.data.mch_positiony;
-        
-        await this.reduceAP(Math.abs(px - tile.absolutePos.x) + Math.abs(py - tile.absolutePos.y));
-
         this.data.mch_positionx = tile.absolutePos.x + 1;
         this.data.mch_positiony = 18 - tile.absolutePos.y;
         this.data = await moveMatchCharacter(this.data.mch_id, tile.absolutePos.x + 1, 18 - tile.absolutePos.y);
